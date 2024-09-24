@@ -11,6 +11,9 @@ import logout from "../assets/icons/logout.png";
 import eyeHide from "../assets/icons/eye-hide.png";
 import eye from "../assets/icons/eye.png";
 import play from "../assets/icons/play.png";
+import waterDrop from "../assets/icons/water_drop.png"
+import profileInactive from "../assets/icons/profile_inactive.png"
+import waterDropInactive from "../assets/icons/water_drop_inactive.png"
 
 export default {
   play,
@@ -26,4 +29,7 @@ export default {
   logout,
   eyeHide,
   eye,
+  waterDrop,
+  profileInactive,
+  waterDropInactive
 };

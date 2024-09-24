@@ -6,7 +6,7 @@ const Button = ({title, handle, containerStyles}) => {
     return (
         <View className={`${containerStyles}`}>
             <TouchableOpacity 
-                className="w-[65vw] justify-center items-center border-blue border-2 rounded-xl"
+                className="w-[65vw] justify-center items-center border-blue border-2 rounded-[5000px] py-2"
                 onPress={handle}
                 >
 

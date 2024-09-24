@@ -9,7 +9,7 @@ const index = () => {
     <View className="justify-center items-center h-full ">
       <Text className="text-blue text-2xl">This is the health remider app.</Text>
       <Button
-        title={'Sign in'}
+        title={'Continue'}
         handle={() => {router.push('sign-in')}}
         containerStyles={'mt-8'}
       />

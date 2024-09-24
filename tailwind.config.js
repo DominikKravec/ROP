@@ -6,7 +6,11 @@ module.exports = {
     colors: {
       blue: {
         DEFAULT: "#3CACFD",
-        100: '#3CACFD',
+        100: '#A5D9FF',
+        200: '#7DC9FF'
+      },
+      gray: {
+        DEFAULT: "#D9D9D9"
       }
     }
   },
