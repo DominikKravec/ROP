@@ -1,10 +1,13 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 import Button from '../components/Button'
-import { router } from 'expo-router'
+import { router, Redirect } from 'expo-router'
 
 
 const index = () => {
+
+  if(true)return <Redirect href="/profile"/>
+  
   return (
     <View className="justify-center items-center h-full ">
       <Text className="text-blue text-2xl">This is the health remider app.</Text>

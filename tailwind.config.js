@@ -11,7 +11,15 @@ module.exports = {
       },
       gray: {
         DEFAULT: "#D9D9D9"
-      }
+      },
+      red: {
+        DEFAULT: "#FF0000",
+        100: "#FC5E5E",
+      },
+      white: {
+        DEFAULT: '#fefeff',
+      },
+      primary: '#fefeff'
     }
   },
   plugins: [],
