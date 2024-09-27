@@ -4,6 +4,11 @@ module.exports = {
   theme: {
     extend: {},
     colors: {
+      red: {
+        DEFAULT: "#FF0000",
+        100: "#FC5E5E",
+      },
+
       blue: {
         DEFAULT: "#3CACFD",
         100: '#A5D9FF',
@@ -12,10 +17,7 @@ module.exports = {
       gray: {
         DEFAULT: "#D9D9D9"
       },
-      red: {
-        DEFAULT: "#FF0000",
-        100: "#FC5E5E",
-      },
+      
       white: {
         DEFAULT: '#fefeff',
       },

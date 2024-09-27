@@ -4,6 +4,9 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Button from "../../components/Button.jsx"
 import { TouchableOpacity } from 'react-native'
 import icons from "../../constants/icons.js"
+import CustomCupModal from "../../components/CustomCupModal.jsx"
+import CustomGoalModal from "../../components/CustomGoalModal.jsx"
+import ReminderAmountModal from "../../components/ReminderAmountModal.jsx"
 
 const profile = () => {
 
@@ -24,17 +27,17 @@ const profile = () => {
         />
         <Button
           title="Set custom water goal"
-          handle={() => {setModal(true); setModalContent(CustomGoalModal)}}
+          handle={() => {setModal(true); setModalContent(<CustomGoalModal closeModal={() => {setModal(false)}}/>)}}
           containerStyles={'mt-5'}
         />
                 <Button
           title="Set amount of remiders"
-          handle={() => {setModal(true); setModalContent(ReminderAmountModal)}}
+          handle={() => {setModal(true); setModalContent(<ReminderAmountModal closeModal={() => {setModal(false)}}/>)}}
           containerStyles={'mt-5'}
         />
                 <Button
           title="Set custom cup size"
-          handle={() => { setModal(true); setModalContent(CustomCupModal)}}
+          handle={() => { setModal(true); setModalContent(<CustomCupModal closeModal={() => {setModal(false)}}/>)}}
           containerStyles={'mt-5'}
         />
                 <Button
@@ -46,7 +49,7 @@ const profile = () => {
           title="Log out"
           handle={() => {}}
           containerStyles={'mt-5'}
-          customColor={'red-100'}
+          customColor={'red'}
         />
       </View>
 
@@ -76,39 +79,5 @@ const profile = () => {
     </SafeAreaView>
   )
 }
-
-const CustomCupModal = () => {
-  return (
-    <View>
-      <Text className="text-xl text-blue">
-        How much water should be in a cup?
-      </Text>
-
-    </View>
-  )
-}
-
-const CustomGoalModal = () => {
-  return (
-    <View>
-      <Text className="text-xl text-blue">
-        Set custom water goal
-      </Text>
-
-    </View>
-  )
-}
-
-const ReminderAmountModal = () => {
-  return (
-    <View>
-      <Text className="text-xl text-blue">
-        How many remiders to drink water should you get?
-      </Text>
-
-    </View>
-  )
-}
-
 
 export default profile

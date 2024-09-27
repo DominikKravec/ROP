@@ -9,7 +9,7 @@ const index = () => {
   if(true)return <Redirect href="/profile"/>
   
   return (
-    <View className="justify-center items-center h-full ">
+    <View className="justify-center items-center h-full bg-primary">
       <Text className="text-blue text-2xl">This is the health remider app.</Text>
       <Button
         title={'Continue'}
