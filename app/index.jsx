@@ -2,11 +2,24 @@ import { View, Text } from 'react-native'
 import React from 'react'
 import Button from '../components/Button'
 import { router, Redirect } from 'expo-router'
+import { useGlobalContext } from '../context/globalProvider'
 
 
 const index = () => {
 
-  if(true)return <Redirect href="/profile"/>
+  const {lastResetDate, setLastResetDate, setWaterDrank} = useGlobalContext()
+  const todayDate = new Date().toISOString().split('T')[0];
+
+  if( lastResetDate !== todayDate){
+    setWaterDrank(0)
+    setLastResetDate(todayDate)
+  }
+
+  //setWaterDrank(0)
+
+  console.log(lastResetDate)
+
+  if(true)return <Redirect href="/home"/>
   
   return (
     <View className="justify-center items-center h-full bg-primary">

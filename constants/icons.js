@@ -14,6 +14,9 @@ import play from "../assets/icons/play.png";
 import waterDrop from "../assets/icons/water_drop.png"
 import profileInactive from "../assets/icons/profile_inactive.png"
 import waterDropInactive from "../assets/icons/water_drop_inactive.png"
+import cupIcon from "../assets/icons/cup_icon.png"
+import close from "../assets/icons/close.png"
+import previous from "../assets/icons/previous.png"
 
 export default {
   play,
@@ -31,5 +34,8 @@ export default {
   eye,
   waterDrop,
   profileInactive,
-  waterDropInactive
+  waterDropInactive,
+  cupIcon,
+  close,
+  previous
 };

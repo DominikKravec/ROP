@@ -3,6 +3,7 @@ import React, {useEffect} from 'react'
 import { Slot, Stack } from 'expo-router'
 import { useFonts } from 'expo-font'
 import { SplashScreen } from 'expo-router'
+import { GlobalProvider } from '../context/globalProvider'
 
 const RootLayout = () => {
     useEffect(() => {
@@ -34,14 +35,15 @@ const RootLayout = () => {
     }
 
     return (
-        <Slot>
-            <Stack>
-                <Stack.Screen name="index" options={{headerShown: false}}/>
-                <Stack.Screen name="(auth)" options={{headerShown: false}}/>
-                <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
-            </Stack>
-
-        </Slot>
+        <GlobalProvider>
+            <Slot>
+                <Stack>
+                    <Stack.Screen name="index" options={{headerShown: false}}/>
+                    <Stack.Screen name="(auth)" options={{headerShown: false}}/>
+                    <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
+                </Stack>
+            </Slot>
+        </GlobalProvider>
     )
 }
 
