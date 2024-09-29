@@ -9,7 +9,7 @@ import { Link, router } from 'expo-router'
 const SignIn = () => {
   return (
     <SafeAreaView className="h-full">
-      <View className=" justify-center items-center h-full">
+      <View className=" justify-center items-center h-full bg-primary">
         <Input
           placeholder={"email"}
         />

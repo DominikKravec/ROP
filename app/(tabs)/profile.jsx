@@ -7,6 +7,7 @@ import icons from "../../constants/icons.js"
 import CustomCupModal from "../../components/CustomCupModal.jsx"
 import CustomGoalModal from "../../components/CustomGoalModal.jsx"
 import ReminderAmountModal from "../../components/ReminderAmountModal.jsx"
+import { router } from 'expo-router'
 
 const profile = () => {
 
@@ -22,7 +23,7 @@ const profile = () => {
       <View className="justify-center w-full mt-8">
         <Button
           title="Edit personal information"
-          handle={() => {}}
+          handle={() => {router.push('personalInfo')}}
           containerStyles={'mt-5'}
         />
         <Button
@@ -49,7 +50,7 @@ const profile = () => {
           title="Log out"
           handle={() => {}}
           containerStyles={'mt-5'}
-          customColor={'red'}
+          customColor={'red-100'}
         />
       </View>
 

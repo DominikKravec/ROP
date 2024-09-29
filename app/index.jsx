@@ -15,11 +15,7 @@ const index = () => {
     setLastResetDate(todayDate)
   }
 
-  //setWaterDrank(0)
-
-  console.log(lastResetDate)
-
-  if(true)return <Redirect href="/home"/>
+  //if(true)return <Redirect href="/personalInfo"/>
   
   return (
     <View className="justify-center items-center h-full bg-primary">

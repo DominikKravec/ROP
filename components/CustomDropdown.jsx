@@ -5,7 +5,7 @@ import { Dropdown } from 'react-native-element-dropdown'
 const CustomDropdown = ({options, value, handleChangeValue}) => {
     return (
         <View className="flex-row justify-center items-center">
-            <Text className="text-blue text-2xl">{value.label}</Text>
+            <Text className="text-blue text-2xl">{value}</Text>
             <Dropdown
                 data={options}
                 style={[styles.dropdown]}
