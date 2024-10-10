@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "health-reminder2_0",
-    "slug": "health-reminder2_0",
+    "name": "health-reminder",
+    "slug": "health-reminder",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
