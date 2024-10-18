@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, FlatList } from 'react-native'
 import React from 'react'
 
 const PageIndicator = ({activePage, numberOfPages}) => {
@@ -6,29 +6,36 @@ const PageIndicator = ({activePage, numberOfPages}) => {
   const dots = []  
 
   for(let i = 0; i < numberOfPages; i++){
-    dots.push(i == activePage? (<ActiveDot/>):(<Dot/>))
+    dots.push({pageNum: i})
   }
 
   console.log(dots)
   
   return (
     <View className="w-[100vw] justify-center items-center h-10 ">
-      {dots}
+      <FlatList
+        data={dots}
+        keyExtractor={(item) => item.pageNum}
+        horizontal={true}
+        renderItem={({item}) => {
+            return(
+                <View>
+                    <Dot pageNum={item.pageNum} activePage={activePage}/>
+                </View>
+            )
+        }}
+      />
     </View>
   )
 }
 
-const Dot = () => {
+const Dot = ({pageNum, activePage}) => {
     return(
-        <View className="w-2 h-2 rounded-xl bg-blue-100"></View>
+        <View className={`m-1 w-2 h-2 rounded-xl ${pageNum == activePage ? 'bg-blue' : 'bg-blue-100'}`}></View>
     )
 }
 
-const ActiveDot = () => {
-    return(
-        <View className="w-2 h-2 rounded-xl bg-blue"></View>
-    )
-}
+
 
 
 export default PageIndicator

@@ -33,7 +33,7 @@ const home = () => {
         <WaterInfoPage/>
         <GraphPage/>
       </ScrollView>
-      <PageIndicator />
+      <PageIndicator numberOfPages={2} activePage={activePage}/>
     </SafeAreaView>
   )
 }
