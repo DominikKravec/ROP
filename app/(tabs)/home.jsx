@@ -1,79 +1,39 @@
-import { View, Text, Modal, TouchableOpacity, Image } from 'react-native'
-import React, {useState} from 'react'
+import { ScrollView, Dimensions, Text } from 'react-native'
+import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useGlobalContext } from '../../context/globalProvider'
-import IconButton from '../../components/IconButton'
-import icons from '../../constants/icons'
-import AddDrinkModal from '../../components/AddDrinkModal'
+
+import WaterInfoPage from '../../components/WaterInfoPage'
+import GraphPage from '../../components/GraphPage'
+import PageIndicator from '../../components/PageIndicator'
 
 
 const home = () => {
+  const screenWidth = Dimensions.get('window').width;
 
-  const {waterDrank, waterGoal, waterUnit, cupVolume, setWaterDrank} = useGlobalContext()
+  const [activePage, setActivePage] = useState(0)
 
-  const [modal, setModal] = useState(false)
-  const [modalContent, setModalContent] = useState(null)
-
+  const handleScroll = (event) => {
+    const contentOffsetX = event.nativeEvent.contentOffset.x;
+    const currentPage = Math.round(contentOffsetX / screenWidth); // Calculate current page
+    setActivePage(currentPage); // Update active page state
+  };
+  
   return (
     <SafeAreaView
       className="bg-primary h-full"
     >
-      <View className="w-full h-full justify-center items-center"> 
-        <Text className="text-2xl text-blue">
-          {/* change the height of the parent when you add more parts */}        
-          {waterDrank}/{waterGoal}{waterUnit}
-        </Text>
-        <View>
-          <View className="flex flex-row justify-between">
-            <View className="w-[48%]">
-              <IconButton
-                icon={icons.cupIcon}
-                title="quick cup"
-                handle={() => {setWaterDrank(waterDrank + cupVolume)}}
-              />
-            </View>
-
-            <View className="w-[48%]">
-              <IconButton
-                icon={icons.plus}
-                title="Add drink"
-                handle={() => {setModal(true); setModalContent(<AddDrinkModal/>)}}
-              />
-            </View>
-          </View>
-          <View>
-            <IconButton
-              icon={icons.previous}
-              title="Previous drink"
-              handle={() => {setWaterDrank(waterDrank + cupVolume)}}
-            />
-
-          </View>
-        </View>
-      </View>
-      <Modal
-        animationType='slide'
-        onRequestClose={()=>{setModal(false)}}
-        visible={modal}
-        transparent={true}
-      >
-        <View className='h-full justify-center items-center'>
-          <View className='bg-primary border-blue border-4 rounded-xl p-5'>
-            <View className=''>
-              <TouchableOpacity
-                onPress={() => {setModal(false)}}
-              >
-                <Image 
-                  source={icons.close}
-                  resizeMode='contain'
-                  className='h-5 w-5'
-                />
-              </TouchableOpacity>
-            </View>
-            {modalContent}
-          </View>
-        </View>
-      </Modal>
+      <ScrollView
+        horizontal={true}
+        pagingEnabled={true} 
+        showsHorizontalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+        className="flex-1"
+      > 
+        <WaterInfoPage/>
+        <GraphPage/>
+      </ScrollView>
+      <PageIndicator />
     </SafeAreaView>
   )
 }

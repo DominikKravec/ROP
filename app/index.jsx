@@ -16,7 +16,8 @@ const index = () => {
   }
 
   //if(true)return <Redirect href="/personalInfo"/>
-  
+  if(true)return <Redirect href="/home"/>
+
   return (
     <View className="justify-center items-center h-full bg-primary">
       <Text className="text-blue text-2xl">This is the health remider app.</Text>

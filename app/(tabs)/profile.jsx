@@ -18,7 +18,7 @@ const profile = () => {
     <SafeAreaView className="h-full px-5 bg-primary">
       <View className="flex-col ">
         <Text className="text-2xl text-blue">Logged in as</Text>
-        <Text className="text-5xl text- mt-1">User {/* change this to the actual user name*/}</Text>
+        <Text className="text-5xl text-blue mt-1">User {/* change this to the actual user name*/}</Text>
       </View>
       <View className="justify-center w-full mt-8">
         <Button
@@ -50,7 +50,7 @@ const profile = () => {
           title="Log out"
           handle={() => {}}
           containerStyles={'mt-5'}
-          customColor={'red-100'}
+          customColor={'exit-100'}
         />
       </View>
 
