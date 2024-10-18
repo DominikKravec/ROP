@@ -8,6 +8,7 @@ import CustomCupModal from "../../components/CustomCupModal.jsx"
 import CustomGoalModal from "../../components/CustomGoalModal.jsx"
 import ReminderAmountModal from "../../components/ReminderAmountModal.jsx"
 import { router } from 'expo-router'
+import CustomModal from '../../components/CustomModal.jsx'
 
 const profile = () => {
 
@@ -54,29 +55,11 @@ const profile = () => {
         />
       </View>
 
-      <Modal
-        animationType='slide'
-        onRequestClose={()=>{setModal(false)}}
-        visible={modal}
-        transparent={true}
-      >
-        <View className='h-full justify-center items-center'>
-          <View className='bg-primary border-blue border-4 rounded-xl p-5'>
-            <View className=''>
-              <TouchableOpacity
-                onPress={() => {setModal(false)}}
-              >
-                <Image 
-                  source={icons.close}
-                  resizeMode='contain'
-                  className='h-5 w-5'
-                />
-              </TouchableOpacity>
-            </View>
-            {modalContent}
-          </View>
-        </View>
-      </Modal>
+      <CustomModal
+        modal={modal}
+        setModal={setModal}
+        modalContent={modalContent}
+      />
     </SafeAreaView>
   )
 }

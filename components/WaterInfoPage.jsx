@@ -1,9 +1,10 @@
 import { View, Text, Modal, TouchableOpacity, Image } from 'react-native'
 import React, {useState} from 'react'
 import { useGlobalContext } from '../context/globalProvider'
-import IconButton from './/IconButton'
+import IconButton from './IconButton'
 import icons from '../constants/icons'
 import AddDrinkModal from './AddDrinkModal'
+import CustomModal from './CustomModal'
 
 const WaterInfoPage = () => {
 
@@ -47,29 +48,11 @@ const WaterInfoPage = () => {
 
                 </View>
                 </View>
-            <Modal
-                animationType='slide'
-                onRequestClose={()=>{setModal(false)}}
-                visible={modal}
-                transparent={true}
-            >
-                <View className='h-full justify-center items-center'>
-                <View className='bg-primary border-blue border-4 rounded-xl p-5'>
-                    <View className=''>
-                    <TouchableOpacity
-                        onPress={() => {setModal(false)}}
-                    >
-                        <Image 
-                        source={icons.close}
-                        resizeMode='contain'
-                        className='h-5 w-5'
-                        />
-                    </TouchableOpacity>
-                    </View>
-                    {modalContent}
-                </View>
-                </View>
-            </Modal>
+                <CustomModal
+                    modalContent={modalContent}
+                    modal={modal}
+                    setModal={setModal}
+                />
             </View>
         </>
     )

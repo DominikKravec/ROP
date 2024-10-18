@@ -15,8 +15,8 @@ const index = () => {
     setLastResetDate(todayDate)
   }
 
-  //if(true)return <Redirect href="/personalInfo"/>
-  if(true)return <Redirect href="/home"/>
+  if(true)return <Redirect href="/personalInfo"/>
+  //if(true)return <Redirect href="/home"/>
 
   return (
     <View className="justify-center items-center h-full bg-primary">
