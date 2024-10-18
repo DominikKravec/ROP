@@ -8,8 +8,6 @@ const PageIndicator = ({activePage, numberOfPages}) => {
   for(let i = 0; i < numberOfPages; i++){
     dots.push({pageNum: i})
   }
-
-  console.log(dots)
   
   return (
     <View className="w-[100vw] justify-center items-center h-10 ">

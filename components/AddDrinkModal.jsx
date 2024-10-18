@@ -26,7 +26,7 @@ const AddDrinkModal = () => {
         <CustomDropdown
             options={drinkOptions}
             value={drinkType}
-            handleChangeValue={option => {setDrinkType(option)}}
+            handleChangeValue={option => {setDrinkType(option.label)}}
         />
         <InputUnit
           value={amount}
@@ -36,7 +36,7 @@ const AddDrinkModal = () => {
           handleChangeUnit={option => {setUnit(option.label)}}
         />
         <Button
-            title={'Add ' + amount + unit + ' of '}
+            title={'Add ' + amount + unit + ' of ' + drinkType}
             containerStyles={'mt-5'}
             handle={() => {}}  
         />

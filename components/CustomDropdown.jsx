@@ -5,7 +5,7 @@ import { Dropdown } from 'react-native-element-dropdown'
 const CustomDropdown = ({options, value, handleChangeValue}) => {
     return (
         <View className="flex-row justify-center items-center">
-            <Text className="text-blue text-2xl">{value}</Text>
+            <Text className="text-blue text-2xl absolute z-10 ">{value}</Text>
             <Dropdown
                 data={options}
                 style={[styles.dropdown]}
@@ -14,6 +14,9 @@ const CustomDropdown = ({options, value, handleChangeValue}) => {
                 mode='default'
                 labelField='label'
                 valueField='value'
+                value={value}
+                placeholderStyle={styles.placeholder}
+                placeholder="Select drink"
                 onChange={handleChangeValue}
                 renderItem={item => {return(
                     <View className="bg-primary w-fit">
@@ -28,14 +31,26 @@ const CustomDropdown = ({options, value, handleChangeValue}) => {
 export default CustomDropdown
 
 const styles = StyleSheet.create({
+
+    placeholder: {
+      fontSize: 24,
+      color: '#fefeff',
+      marginLeft: 8,
+    },
     
     dropdown: {
       borderColor: '#3CACFD',
-      height: 30,
+      height: 40,
+      width: 150,
       marginLeft: 5,
       borderWidth: 2,
       borderRadius: 8,
       paddingHorizontal: 0,
       paddingVertical: 0,
+    },
+    text: {
+      fontSize: 24,
+      color: '#fefeff',
+      marginLeft: 8,
     },
 })
