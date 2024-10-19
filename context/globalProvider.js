@@ -17,6 +17,7 @@ export const GlobalProvider = ({children}) => {
     const [customDrinks, setCustomDrinks] = useState([{id: 0,name: "CapriSun", sugar: 50, alcohol: 0, calories: 70}])
 
     const [editedDrink, setEditedDrink] = useState(null)
+    const [sugarFromDrinks, setSugarFromDrinks] = useState(0)
 
     return (
         <GlobalContext.Provider
@@ -35,6 +36,8 @@ export const GlobalProvider = ({children}) => {
                 setCustomDrinks,
                 setEditedDrink,
                 editedDrink,
+                sugarFromDrinks, 
+                setSugarFromDrinks
                 
             }}
         >

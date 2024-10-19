@@ -51,7 +51,7 @@ const profile = () => {
           title="Log out"
           handle={() => {}}
           containerStyles={'mt-5'}
-          customColor={'exit-100'}
+          customColor={'pink'}
         />
       </View>
 

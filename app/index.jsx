@@ -15,11 +15,11 @@ const index = () => {
     setLastResetDate(todayDate)
   }
 
-  if(true)return <Redirect href="/customDrinks"/>
+  //if(true)return <Redirect href="/home"/>
 
   return (
     <View className="justify-center items-center h-full bg-primary">
-      <Text className="text-blue text-2xl">This is the health remider app.</Text>
+      <Text className="text-blue text-2xl">Welcome to Health Reminder</Text>
       <Button
         title={'Continue'}
         handle={() => {router.push('sign-in')}}

@@ -10,7 +10,7 @@ const PageIndicator = ({activePage, numberOfPages}) => {
   }
   
   return (
-    <View className="w-[100vw] justify-center items-center h-10 ">
+    <View className="w-[100vw] justify-center items-center h-10 py-3">
       <FlatList
         data={dots}
         keyExtractor={(item) => item.pageNum}
