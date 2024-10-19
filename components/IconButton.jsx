@@ -11,8 +11,11 @@ const IconButton = ({title, icon, handle}) => {
       >
         <Image
             source={icon}
+            className="w-10 h-10"
         />
-        <Text className="text-lg text-blue-200">{title}</Text>
+        {title && (
+          <Text className="text-lg text-blue-200">{title}</Text>
+        )}
       </TouchableOpacity>
     </View>
   )

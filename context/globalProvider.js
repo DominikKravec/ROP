@@ -14,6 +14,10 @@ export const GlobalProvider = ({children}) => {
     const [lastResetDate, setLastResetDate] = useState(todayDate)
     const [cupVolume, setCupVolume] = useState(200)
 
+    const [customDrinks, setCustomDrinks] = useState([{id: 0,name: "CapriSun", sugar: 50, alcohol: 0, calories: 70}])
+
+    const [editedDrink, setEditedDrink] = useState(null)
+
     return (
         <GlobalContext.Provider
             value={{
@@ -26,7 +30,12 @@ export const GlobalProvider = ({children}) => {
                 lastResetDate,
                 setLastResetDate,
                 cupVolume, 
-                setCupVolume
+                setCupVolume,
+                customDrinks,
+                setCustomDrinks,
+                setEditedDrink,
+                editedDrink,
+                
             }}
         >
             {children}

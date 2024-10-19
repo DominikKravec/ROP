@@ -44,7 +44,7 @@ const profile = () => {
         />
                 <Button
           title="Edit custom drinks"
-          handle={() => {}}
+          handle={() => {router.push("/customDrinks")}}
           containerStyles={'mt-5'}
         />
         <Button

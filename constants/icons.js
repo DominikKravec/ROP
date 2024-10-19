@@ -17,6 +17,8 @@ import waterDropInactive from "../assets/icons/water_drop_inactive.png"
 import cupIcon from "../assets/icons/cup_icon.png"
 import close from "../assets/icons/close.png"
 import previous from "../assets/icons/previous.png"
+import edit from "../assets/icons/edit.png"
+import trash from "../assets/icons/trash.png"
 
 export default {
   play,
@@ -37,5 +39,7 @@ export default {
   waterDropInactive,
   cupIcon,
   close,
-  previous
+  previous,
+  edit,
+  trash
 };

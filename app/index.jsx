@@ -15,7 +15,7 @@ const index = () => {
     setLastResetDate(todayDate)
   }
 
-  if(true)return <Redirect href="/home"/>
+  if(true)return <Redirect href="/customDrinks"/>
 
   return (
     <View className="justify-center items-center h-full bg-primary">

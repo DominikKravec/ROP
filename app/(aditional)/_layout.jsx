@@ -13,6 +13,18 @@ export default function AditionalLayout(){
                     headerShown: false
                 }}
             />
+            <Stack.Screen
+                name="customDrinks"
+                options={{
+                    headerShown: false
+                }}
+            />
+            <Stack.Screen
+                name="drinkEdit"
+                options={{
+                    headerShown: false
+                }}
+            />
         </Stack>
         
     </>
