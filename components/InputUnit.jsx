@@ -11,6 +11,7 @@ const InputUnit = ({options, value, unit, handleChangeText, handleChangeUnit}) =
             onChangeText={handleChangeText}
             value={value}
             keyboardType='number-pad'
+            defaultValue={value}
         />
         <Text className="text-blue text-2xl">{unit}</Text>
         <Dropdown

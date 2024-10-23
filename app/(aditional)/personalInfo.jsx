@@ -1,33 +1,67 @@
 import { View, Text } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import InputUnit from '../../components/InputUnit'
 import CustomDropdown from '../../components/CustomDropdown.jsx'
 import Button from '../../components/Button.jsx'
 import { router } from 'expo-router'
 import DatePicker from '../../components/DatePicker.jsx'
+import { getUserInfo, saveUserInfo } from '../../lib/appwrite.js'
+import { useGlobalContext } from '../../context/globalProvider.js'
 
 const personalInfo = () => {
 
-  const weightUnitOptions = [{label: "kg", value: 0}, {label: "lb", value: 1},]
-  const [weightUnit, setWeightUnit] = useState(weightUnitOptions[0].label)
+  const {user} = useGlobalContext()
+
+  const [documentId, setDocumentId] = useState('')
   const [weight, setWeight] = useState(0)
-
-  const genderOptions = [{label: 'male', value: 0}, {label: 'female', value: 1}]
   const [gender, setGender] = useState('male')
-
   const [dateOfBirth, setDateOfBirth] = useState({  //change this so it has the users info
     date: 1,
     month: 1,
     year: 1980,
   })
 
+  const extractDate = (dateTime) => {
+
+    const dateObject = dateTime.split('T')[0].split('-');
+
+    return {
+      date: dateObject[2],
+      month: dateObject[1],
+      year: dateObject[0]
+    }
+  }
+
+  
+  useEffect(() => {
+    const getInfo = async () => {
+      try {
+        const userInfo = await getUserInfo(user.$id)  
+        setWeight(userInfo.weight)
+        setGender(userInfo.gender)
+        setDateOfBirth(extractDate(userInfo.dateOfBirth))
+        setDocumentId(userInfo.$id)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    getInfo()
+  }, [])
+
+  const weightUnitOptions = [{label: "kg", value: 0}, {label: "lb", value: 1},]
+  const [weightUnit, setWeightUnit] = useState(weightUnitOptions[0].label)
+
+  const genderOptions = [{label: 'male', value: 0}, {label: 'female', value: 1}]
+
   const daysInMonths = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
   const save = () => {
     if(dateOfBirth.date <= daysInMonths[dateOfBirth.month - 1] && weight > 0){
+      saveUserInfo(documentId, weight, gender, dateOfBirth)
       router.replace('/profile')
-      //add saving to database here
+      
     }
     
   }

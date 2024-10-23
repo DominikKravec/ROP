@@ -12,6 +12,7 @@ const Input = ({ title, value, placeholder, handleChangeText, otherStyles, ...pr
         <TextInput
             className="flex-1 text-blue text-xl"
             value={value}
+            defaultValue={value}
             placeholder={placeholder}
             placeholderTextColor="#A5D9FF"
             onChangeText={handleChangeText}

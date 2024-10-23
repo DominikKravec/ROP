@@ -6,6 +6,7 @@ import Input from '../../components/Input'
 import { TouchableOpacity } from 'react-native'
 import { Link, router } from 'expo-router'
 import { createUser } from '../../lib/appwrite'
+import { useGlobalContext } from '../../context/globalProvider'
 
 const SignUp = () => {
 
@@ -13,11 +14,14 @@ const SignUp = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
+  const {setUser, setIsLoggedIn} = useGlobalContext()
 
   const register = async () => {
     if(username.trim() && email.trim() && password.trim()){
       try {
         const result = await createUser(email, password, username)
+        setUser(result)
+        setIsLoggedIn(true)
         router.replace('/personalInfo')
       } catch (error) {
         Alert.alert(error)
