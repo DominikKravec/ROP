@@ -10,12 +10,14 @@ const index = () => {
   const {lastResetDate, setLastResetDate, setWaterDrank} = useGlobalContext()
   const todayDate = new Date().toISOString().split('T')[0];
 
+  const {isLoggedIn} = useGlobalContext()
+
   if( lastResetDate !== todayDate){
     setWaterDrank(0)
     setLastResetDate(todayDate)
   }
 
-  //if(true)return <Redirect href="/home"/>
+  if(isLoggedIn) return <Redirect href="/home"/>
 
   return (
     <View className="justify-center items-center h-full bg-primary">

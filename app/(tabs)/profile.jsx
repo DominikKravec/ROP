@@ -9,17 +9,20 @@ import CustomGoalModal from "../../components/CustomGoalModal.jsx"
 import ReminderAmountModal from "../../components/ReminderAmountModal.jsx"
 import { router } from 'expo-router'
 import CustomModal from '../../components/CustomModal.jsx'
+import { useGlobalContext } from '../../context/globalProvider.js'
+import { signOut } from '../../lib/appwrite.js'
 
 const profile = () => {
 
   const [modal, setModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
+  const {user, setUser, setIsLoggedIn} = useGlobalContext()
 
   return (
     <SafeAreaView className="h-full px-5 bg-primary">
       <View className="flex-col ">
         <Text className="text-2xl text-blue">Logged in as</Text>
-        <Text className="text-5xl text-blue mt-1">User {/* change this to the actual user name*/}</Text>
+        <Text className="text-5xl text-blue mt-1">{user.username}</Text>
       </View>
       <View className="justify-center w-full mt-8">
         <Button
@@ -49,9 +52,14 @@ const profile = () => {
         />
         <Button
           title="Log out"
-          handle={() => {}}
+          handle={() => { 
+            signOut()
+            setUser(null)
+            setIsLoggedIn(false)
+            router.replace('/sign-in') 
+          }}
           containerStyles={'mt-5'}
-          customColor={'pink'}
+          customColor={'pink-100'}
         />
       </View>
 

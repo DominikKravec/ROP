@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { getCurrentUser } from "../lib/appwrite";
 
 const GlobalContext = createContext()
 export const useGlobalContext = () => useContext(GlobalContext)
@@ -19,6 +20,28 @@ export const GlobalProvider = ({children}) => {
     const [editedDrink, setEditedDrink] = useState(null)
     const [sugarFromDrinks, setSugarFromDrinks] = useState(0)
 
+    const [user, setUser] = useState({})
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+    useEffect(() =>{
+        getCurrentUser()
+            .then((res) => {
+                if(res){
+                    setIsLoggedIn(true)
+                    setUser(res)
+                }else{
+                    
+                    setIsLoggedIn(false)
+                    setUser(null)
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+            .finally(() => {
+            })
+    }, [])
+
     return (
         <GlobalContext.Provider
             value={{
@@ -37,7 +60,11 @@ export const GlobalProvider = ({children}) => {
                 setEditedDrink,
                 editedDrink,
                 sugarFromDrinks, 
-                setSugarFromDrinks
+                setSugarFromDrinks,
+                user,
+                setUser,
+                isLoggedIn,
+                setIsLoggedIn
                 
             }}
         >

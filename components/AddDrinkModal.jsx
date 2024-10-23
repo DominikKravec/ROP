@@ -14,7 +14,6 @@ const AddDrinkModal = () => {
     const drinkOptions = [
         {label: 'water', value: 0},
         {label: 'cola', value: 1},
-        {label: 'beer', value: 2}
     ]
   
     const [unit, setUnit] = useState(options[0].label)
