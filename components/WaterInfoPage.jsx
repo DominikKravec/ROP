@@ -1,5 +1,5 @@
 import { View, Text, Modal, TouchableOpacity, Image } from 'react-native'
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { useGlobalContext } from '../context/globalProvider'
 import IconButton from './IconButton'
 import icons from '../constants/icons'
@@ -9,7 +9,15 @@ import CircularProgress from 'react-native-circular-progress-indicator'
 
 const WaterInfoPage = () => {
 
-    const {waterDrank, waterGoal, waterUnit, cupVolume, setWaterDrank} = useGlobalContext()
+    const {userSettings, waterDrank, waterGoal} = useGlobalContext()
+
+    const [unit, setUnit] = useState('ml')
+
+    useEffect(() => {
+        if(userSettings){
+            setUnit(userSettings.volumeUnit)
+        }
+    }, userSettings)
 
     const [modal, setModal] = useState(false)
     const [modalContent, setModalContent] = useState(null)
@@ -32,7 +40,8 @@ const WaterInfoPage = () => {
 
                     <Text className="text-2xl text-blue mt-5">
                         {/* change the height of the parent when you add more parts */}        
-                        {waterDrank}/{waterGoal}{waterUnit}
+                        {waterDrank}/{waterGoal}{unit}
+
                     </Text>
                 </View>
 
