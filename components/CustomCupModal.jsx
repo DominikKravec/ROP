@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 import InputUnit from './InputUnit';
 import Button from './Button';
 import { useGlobalContext } from '../context/globalProvider';
+import { updateUserSettings } from '../lib/appwrite';
 
 const CustomCupModal = ({closeModal}) => {
 
@@ -15,7 +16,7 @@ const CustomCupModal = ({closeModal}) => {
     const [unit, setUnit] = useState(options[0].label)
     const [amount, setAmount] = useState(0)
 
-    const {setCupVolume} = useGlobalContext()
+    const {userSettings, setUserSettings, user} = useGlobalContext()
 
     return (
       <View>
@@ -32,7 +33,15 @@ const CustomCupModal = ({closeModal}) => {
         <Button
             title={'Set cup volume to ' + amount + unit}
             containerStyles={'mt-5'}
-            handle={() => {setCupVolume(parseInt(amount)); closeModal()}}  
+            handle={() => {
+              try{
+                setUserSettings({...userSettings, cupSize: parseFloat(amount)})
+                updateUserSettings(user.$id, userSettings)
+                closeModal()
+              }catch (error){
+                console.log(error)
+              }
+            }}  
         />
 
       </View>

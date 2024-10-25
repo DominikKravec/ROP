@@ -18,6 +18,8 @@ const profile = () => {
   const [modalContent, setModalContent] = useState(null)
   const {user, setUser, setIsLoggedIn} = useGlobalContext()
 
+  
+
   return (
     <SafeAreaView className="h-full px-5 bg-primary">
       <View className="flex-col ">
@@ -32,12 +34,12 @@ const profile = () => {
         />
         <Button
           title="Set custom water goal"
-          handle={() => {setModal(true); setModalContent(<CustomGoalModal closeModal={() => {setModal(false)}}/>)}}
+          handle={() => { setModal(true); setModalContent(<CustomGoalModal closeModal={() => {setModal(false)}}/>)}}
           containerStyles={'mt-5'}
         />
                 <Button
           title="Set amount of remiders"
-          handle={() => {setModal(true); setModalContent(<ReminderAmountModal closeModal={() => {setModal(false)}}/>)}}
+          handle={() => { setModal(true); setModalContent(<ReminderAmountModal closeModal={() => {setModal(false)}}/>)}}
           containerStyles={'mt-5'}
         />
                 <Button

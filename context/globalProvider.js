@@ -51,10 +51,8 @@ export const GlobalProvider = ({children}) => {
     }, [])
 
     useEffect(() => {
-        
-        if(user){
-
-            const aplyUserSettings = async () => {
+        const aplyUserSettings = async () => {
+            if(user && user.$id){
                 try {
                     const settings = await getUserSettings(user.$id)
                     setUserSettings(settings)
@@ -62,15 +60,13 @@ export const GlobalProvider = ({children}) => {
                         setWaterGoal(settings.customWaterGoal)
                     }
                     //console.log('settings aplied')
-
+    
                 } catch (error) {
                     console.log(error)
                 }
             }
-
-            aplyUserSettings()
         }
-
+        aplyUserSettings()
     }, [user])
 
     return (
