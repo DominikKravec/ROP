@@ -8,10 +8,11 @@ import { router } from 'expo-router'
 import DatePicker from '../../components/DatePicker.jsx'
 import { getUserInfo, saveUserInfo } from '../../lib/appwrite.js'
 import { useGlobalContext } from '../../context/globalProvider.js'
+import { weightUnits } from '../../constants/units.js'
 
 const personalInfo = () => {
 
-  const {user} = useGlobalContext()
+  const {user, calculateWater} = useGlobalContext()
 
   const [documentId, setDocumentId] = useState('')
   const [weight, setWeight] = useState(0)
@@ -59,8 +60,17 @@ const personalInfo = () => {
 
   const save = () => {
     if(dateOfBirth.date <= daysInMonths[dateOfBirth.month - 1] && weight > 0){
-      saveUserInfo(documentId, weight, gender, dateOfBirth)
-      router.replace('/profile')
+
+
+      try {
+        console.log(weight)
+        saveUserInfo(documentId, weight, gender, dateOfBirth)
+        calculateWater()
+        router.replace('/profile')  
+      } catch (error) {
+        console.log(error)
+      }
+      
       
     }
     
@@ -76,7 +86,7 @@ const personalInfo = () => {
           options={weightUnitOptions}
           unit={weightUnit}
           value={weight}
-          handleChangeText={text => {setWeight(parseInt(text))}}
+          handleChangeText={text => {setWeight(parseInt(text) * weightUnits[weightUnit])}}
           handleChangeUnit={option => {setWeightUnit(option.label)}}
         />
       </View>

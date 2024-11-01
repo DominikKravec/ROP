@@ -26,6 +26,40 @@ export const GlobalProvider = ({children}) => {
     const [editedDrink, setEditedDrink] = useState(null)
     const [sugarFromDrinks, setSugarFromDrinks] = useState(0)
 
+    const [userInfo, setUserInfo] = useState({})
+
+    const calculateAge = (dob) => {
+        const today = new Date()
+        let age = today.getFullYear() - dob.getFullYear()
+        const monthDiff = today.getMonth() - dob.getMonth()
+        const dayDiff = today.getDate() - dob.getDate()
+    
+        if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+            age--;
+        }
+    
+        return age;
+    }
+
+    const calculateWater = async () => {
+
+        try{
+            const info = await getUserInfo(user.$id)
+            let goal = info.weight * 35
+
+            let age = calculateAge(new Date(info.dateOfBirth))
+            age -= 30
+            while(age >= 0){
+                goal += 350
+                age -= 10
+            }
+
+            setWaterGoal(goal)
+        }catch(error){
+            console.log(error)
+        }
+        
+      }
     
     const [user, setUser] = useState({})
     const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -66,6 +100,20 @@ export const GlobalProvider = ({children}) => {
                 }
             }
         }
+
+        const aplyUserInfo = async () => {
+            if(user && user.$id){
+                try {
+                    const info = await getUserInfo(user.$id)
+                    setUserInfo(info)    
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+        }
+
+        aplyUserInfo()
+        calculateWater()
         aplyUserSettings()
     }, [user])
 
@@ -97,7 +145,10 @@ export const GlobalProvider = ({children}) => {
                 isLoggedIn,
                 setIsLoggedIn,
                 userSettings,
-                setUserSettings
+                setUserSettings,
+                calculateWater,
+                userInfo,
+                setUserInfo,
                 
             }}
         >

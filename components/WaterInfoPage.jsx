@@ -14,7 +14,7 @@ const WaterInfoPage = () => {
     const [unit, setUnit] = useState('ml')
 
     useEffect(() => {
-        if(userSettings){
+        if(userSettings.volumeUnit){
             setUnit(userSettings.volumeUnit)
         }
     }, userSettings)
