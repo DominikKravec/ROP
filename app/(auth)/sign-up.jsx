@@ -17,7 +17,7 @@ const SignUp = () => {
   const {setUser, setIsLoggedIn} = useGlobalContext()
 
   const register = async () => {
-    if(username.trim() && email.trim() && password.trim()){
+    if(username.trim() && email.trim() && password.trim() && password.length >= 8){
       try {
         const result = await createUser(email, password, username)
         setUser(result)

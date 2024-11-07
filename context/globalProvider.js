@@ -54,7 +54,7 @@ export const GlobalProvider = ({children}) => {
                 age -= 10
             }
 
-            setWaterGoal(goal)
+            setWaterGoal(Math.round(goal))
         }catch(error){
             console.log(error)
         }

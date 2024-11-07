@@ -38,18 +38,20 @@ const personalInfo = () => {
   useEffect(() => {
     const getInfo = async () => {
       try {
-        const userInfo = await getUserInfo(user.$id)  
-        setWeight(userInfo.weight)
-        setGender(userInfo.gender)
-        setDateOfBirth(extractDate(userInfo.dateOfBirth))
-        setDocumentId(userInfo.$id)
+        if(user){
+          const userInfo = await getUserInfo(user.$id)  
+          setWeight(userInfo.weight)
+          setGender(userInfo.gender)
+          setDateOfBirth(extractDate(userInfo.dateOfBirth))
+          setDocumentId(userInfo.$id)
+        }
       } catch (error) {
         console.log(error)
       }
     }
 
     getInfo()
-  }, [])
+  }, [user])
 
   const weightUnitOptions = [{label: "kg", value: 0}, {label: "lb", value: 1},]
   const [weightUnit, setWeightUnit] = useState(weightUnitOptions[0].label)
@@ -69,9 +71,7 @@ const personalInfo = () => {
         router.replace('/profile')  
       } catch (error) {
         console.log(error)
-      }
-      
-      
+      }     
     }
     
   }
