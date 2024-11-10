@@ -6,11 +6,12 @@ import icons from '../constants/icons'
 import AddDrinkModal from './AddDrinkModal'
 import CustomModal from './CustomModal'
 import CircularProgress from 'react-native-circular-progress-indicator'
-import { getUserDrinks } from '../lib/appwrite'
+import { createLog, getUserDrinks, getUserLogs } from '../lib/appwrite'
+import { waterId } from '../constants/other'
 
 const WaterInfoPage = () => {
 
-    const {userSettings, waterDrank, waterGoal, user} = useGlobalContext()
+    const {userSettings, waterDrank, waterGoal, user, setWaterDrank} = useGlobalContext()
 
     const [unit, setUnit] = useState('ml')
 
@@ -35,6 +36,31 @@ const WaterInfoPage = () => {
         }
     }, userSettings)
 
+
+    const quickCup = async () => {
+        try {
+            createLog(user.$id, waterId, userSettings.cupSize, new Date())
+            setWaterDrank(waterDrank + parseFloat(userSettings.cupSize))
+        } catch (error) {
+            console.log("Failed to add cup due too: " + error)
+        }
+    }
+
+    const previousDrink = async () => {
+        try {
+            const logs = await getUserLogs(user.$id)
+            const lastLog = logs[logs.length - 1]
+
+            console.log(lastLog)
+
+            createLog(user.$id, lastLog.drink.$id, parseFloat(lastLog.volume), new Date())
+            setWaterDrank(waterDrank + lastLog.volume)
+
+        } catch (error) {
+            console.log("Failed to add previous drink due too: " + error)
+        }
+    }
+
     const [modal, setModal] = useState(false)
     const [modalContent, setModalContent] = useState(null)
 
@@ -56,7 +82,7 @@ const WaterInfoPage = () => {
 
                     <Text className="text-2xl text-blue mt-5">
                         {/* change the height of the parent when you add more parts */}        
-                        {waterDrank}/{waterGoal}{unit}
+                        {Math.round(waterDrank)}/{waterGoal}{unit}
 
                     </Text>
                 </View>
@@ -67,7 +93,7 @@ const WaterInfoPage = () => {
                         <IconButton
                             icon={icons.cupIcon}
                             title="quick cup"
-                            handle={() => {setWaterDrank(waterDrank + cupVolume)}}
+                            handle={() => {quickCup()}}
                         />
                         </View>
 
@@ -75,7 +101,7 @@ const WaterInfoPage = () => {
                         <IconButton
                             icon={icons.plus}
                             title="Add drink"
-                            handle={() => {setModal(true); setModalContent(<AddDrinkModal drinkOptions={drinkOptions}/>)}}
+                            handle={() => {setModal(true); setModalContent(<AddDrinkModal drinkOptions={drinkOptions} setModal={setModal}/>)}}
                         />
                         </View>
                     </View>
@@ -83,7 +109,7 @@ const WaterInfoPage = () => {
                         <IconButton
                         icon={icons.previous}
                         title="Previous drink"
-                        handle={() => {setWaterDrank(waterDrank + cupVolume)}}
+                        handle={() => {previousDrink()}}
                         />
 
                     </View>
