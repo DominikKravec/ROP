@@ -6,12 +6,28 @@ import icons from '../constants/icons'
 import AddDrinkModal from './AddDrinkModal'
 import CustomModal from './CustomModal'
 import CircularProgress from 'react-native-circular-progress-indicator'
+import { getUserDrinks } from '../lib/appwrite'
 
 const WaterInfoPage = () => {
 
-    const {userSettings, waterDrank, waterGoal} = useGlobalContext()
+    const {userSettings, waterDrank, waterGoal, user} = useGlobalContext()
 
     const [unit, setUnit] = useState('ml')
+
+    const [drinkOptions, setDrinkOptions] = useState([])
+
+    useEffect(() => {
+        const getDrinks = async () => {
+          try{
+            const drinks = await getUserDrinks(user.$id)
+            setDrinkOptions(drinks)
+          }catch(error){
+            console.log(error)
+          }
+        }
+  
+        getDrinks()
+      }, [])
 
     useEffect(() => {
         if(userSettings.volumeUnit){
@@ -59,7 +75,7 @@ const WaterInfoPage = () => {
                         <IconButton
                             icon={icons.plus}
                             title="Add drink"
-                            handle={() => {setModal(true); setModalContent(<AddDrinkModal/>)}}
+                            handle={() => {setModal(true); setModalContent(<AddDrinkModal drinkOptions={drinkOptions}/>)}}
                         />
                         </View>
                     </View>
