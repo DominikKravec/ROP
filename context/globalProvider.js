@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { getCurrentUser, getUserInfo, getUserSettings } from "../lib/appwrite";
+import { getCurrentUser, getTodaysUserLogs, getUserInfo, getUserSettings } from "../lib/appwrite";
 
 const GlobalContext = createContext()
 export const useGlobalContext = () => useContext(GlobalContext)
@@ -112,9 +112,28 @@ export const GlobalProvider = ({children}) => {
             }
         }
 
+        const getWaterDrank = async () => {
+            if(user && user.$id){
+                try {
+                    const todaysLogs = await getTodaysUserLogs(user.$id)
+
+                    let waterDrankToday = 0
+
+                    todaysLogs.forEach(log => {
+                        waterDrankToday += log.volume
+                    })
+
+                    setWaterDrank(waterDrankToday)
+                } catch (error) {
+                    console.log("Couldn't calculate water drank due too: " + error)
+                }
+            }
+        }
+
         aplyUserInfo()
         calculateWater()
         aplyUserSettings()
+        getWaterDrank()
     }, [user])
 
     return (
