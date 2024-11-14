@@ -11,12 +11,16 @@ import { useGlobalContext } from '../../context/globalProvider'
 
 const SignIn = () => {
 
+  function isValidEmail(email) {
+    return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+  }
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const {setUser, setIsLoggedIn} = useGlobalContext()
 
   const submit = async () => {
-    if(email.trim() && password.trim()){
+    if(email.trim() && password.trim() && isValidEmail(email.trim())){
       try {
         await signIn(email, password)
         const result = await getCurrentUser();

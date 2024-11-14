@@ -25,8 +25,9 @@ const AddDrinkModal = ({drinkOptions, setModal}) => {
 
     const submit = () => {
       try {
-        createLog(user.$id, drinkType.$id, parseFloat(amount), new Date())
-        setWaterDrank(waterDrank + parseFloat(amount))
+        console.log(volumeUnits[unit])
+        createLog(user.$id, drinkType.$id, (parseFloat(amount) * volumeUnits[unit]), new Date())
+        setWaterDrank(waterDrank + parseFloat(amount) * volumeUnits[unit])
         setModal(false)
       } catch (error) {
         console.log("Failed to add drink due too: " + error)
@@ -44,7 +45,7 @@ const AddDrinkModal = ({drinkOptions, setModal}) => {
           value={amount}
           options={options}
           unit={unit}
-          handleChangeText={text => {setAmount(text)}}
+          handleChangeText={text => {setAmount(parseFloat(text))}}
           handleChangeUnit={option => {setUnit(option.label)}}
         />
         <Button

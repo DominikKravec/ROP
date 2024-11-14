@@ -8,19 +8,18 @@ import Input from './Input';
 
 const ReminderAmountModal = ({closeModal}) => {
 
-    
-    const [amount, setAmount] = useState(0)
-
-    const {user, userSettings, setUserSettings} = useGlobalContext()
+  const {user, userSettings, setUserSettings} = useGlobalContext()
+  const [amount, setAmount] = useState(userSettings.reminderAmount)
 
     return (
       <View className="justify-center items-center">
-        <Text className="text-xl text-blue">
-          How many remiders to drink water should you get?
+        <Text className="text-xl text-blue mb-5">
+          How many remiders to drink water should you get per day?
         </Text>
         <Input
+          placeholder={"Amount"}
           value={amount}
-          handleChangeText={text => {setAmount(parseInt(text))}}
+          handleChangeText={(text) => {setAmount(parseInt(text))}}
         />
         <Button
             title={'Set reminder amount to ' + amount}

@@ -16,7 +16,7 @@ const CustomGoalModal = ({closeModal}) => {
     const [unit, setUnit] = useState(options[0].label)
     const [amount, setAmount] = useState(0)
 
-    const {user, userSettings, setUserSettings} = useGlobalContext()
+    const {user, userSettings, setUserSettings, setWaterGoal} = useGlobalContext()
 
     return (
       <View>
@@ -36,6 +36,7 @@ const CustomGoalModal = ({closeModal}) => {
             handle={() => {
               setUserSettings({...userSettings, customWaterGoal: amount})
               updateUserSettings(user.$id, userSettings)
+              setWaterGoal(userSettings.customWaterGoal)
               closeModal()
             }}  
         />

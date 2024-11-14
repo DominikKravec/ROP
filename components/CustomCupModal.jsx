@@ -4,6 +4,7 @@ import InputUnit from './InputUnit';
 import Button from './Button';
 import { useGlobalContext } from '../context/globalProvider';
 import { updateUserSettings } from '../lib/appwrite';
+import { volumeUnits } from '../constants/units';
 
 const CustomCupModal = ({closeModal}) => {
 
@@ -35,7 +36,7 @@ const CustomCupModal = ({closeModal}) => {
             containerStyles={'mt-5'}
             handle={() => {
               try{
-                setUserSettings({...userSettings, cupSize: parseFloat(amount)})
+                setUserSettings({...userSettings, cupSize: (parseFloat(amount) * volumeUnits[unit])})
                 updateUserSettings(user.$id, userSettings)
                 closeModal()
               }catch (error){

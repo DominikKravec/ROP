@@ -10,21 +10,24 @@ const CustomModal = ({modalContent, modal, setModal}) => {
         visible={modal}
         transparent={true}
     >
-        <View className='h-full justify-center items-center'>
-        <View className='bg-primary border-blue border-4 rounded-xl p-5'>
-            <View className=''>
-            <TouchableOpacity
-                onPress={() => {setModal(false)}}
-            >
-                <Image 
-                source={icons.close}
-                resizeMode='contain'
-                className='h-5 w-5'
-                />
-            </TouchableOpacity>
+        <View 
+            className='h-full justify-center items-center'
+        >
+            <View className='bg-primary border-blue border-4 rounded-xl p-5 pt-10'>
+                
+                <TouchableOpacity
+                    className='absolute top-2 right-2'
+                    onPress={() => {setModal(false)}}
+                >
+                    <Image 
+                    source={icons.close}
+                    resizeMode='contain'
+                    className='h-5 w-5'
+                    />
+                </TouchableOpacity>
+            
+                {modalContent}
             </View>
-            {modalContent}
-        </View>
         </View>
     </Modal>
   )

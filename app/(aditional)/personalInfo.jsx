@@ -62,10 +62,7 @@ const personalInfo = () => {
 
   const save = () => {
     if(dateOfBirth.date <= daysInMonths[dateOfBirth.month - 1] && weight > 0){
-
-
       try {
-        console.log(weight)
         saveUserInfo(documentId, weight, gender, dateOfBirth)
         calculateWater()
         router.replace('/profile')  
