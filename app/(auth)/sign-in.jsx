@@ -17,7 +17,7 @@ const SignIn = () => {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const {setUser, setIsLoggedIn} = useGlobalContext()
+  const {setUser, setIsLoggedIn, scheduleNotifications} = useGlobalContext()
 
   const submit = async () => {
     if(email.trim() && password.trim() && isValidEmail(email.trim())){
@@ -26,11 +26,11 @@ const SignIn = () => {
         const result = await getCurrentUser();
         setUser(result)
         setIsLoggedIn(true)
+        scheduleNotifications()
         router.replace('/home')
       } catch (error) {
         console.log(error)
       }
-      
     }
   }
 

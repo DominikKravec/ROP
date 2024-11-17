@@ -8,7 +8,7 @@ import Input from './Input';
 
 const ReminderAmountModal = ({closeModal}) => {
 
-  const {user, userSettings, setUserSettings} = useGlobalContext()
+  const {user, userSettings, setUserSettings, scheduleNotifications} = useGlobalContext()
   const [amount, setAmount] = useState(userSettings.reminderAmount)
 
     return (
@@ -27,6 +27,7 @@ const ReminderAmountModal = ({closeModal}) => {
             handle={() => {
               setUserSettings({...userSettings, reminderAmount: amount})
               updateUserSettings(user.$id, userSettings)
+              scheduleNotifications()
               closeModal()
             }}  
         />

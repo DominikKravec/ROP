@@ -1,5 +1,8 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { getCurrentUser, getTodaysUserLogs, getUserInfo, getUserSettings } from "../lib/appwrite";
+import * as Notifications from 'expo-notifications'
+import { scheduleDailyNotifications } from "../lib/notifications";
+
 
 const GlobalContext = createContext()
 export const useGlobalContext = () => useContext(GlobalContext)
@@ -27,6 +30,41 @@ export const GlobalProvider = ({children}) => {
     const [sugarFromDrinks, setSugarFromDrinks] = useState(0)
 
     const [userInfo, setUserInfo] = useState({})
+
+    const scheduleNotifications = async () => {
+
+        Notifications.cancelAllScheduledNotificationsAsync()
+        const startTime = new Date();
+        startTime.setHours(7, 0, 0, 0); // change this to the users choice
+
+        const endTime = new Date(startTime);
+        endTime.setHours(22, 0, 0, 0); //change this to the users choice
+
+        const totalDurationInSeconds = (endTime - startTime) / 1000; 
+        const numberOfNotifications = 10; 
+        const intervalInSeconds = totalDurationInSeconds / (numberOfNotifications - 1);
+
+        let notificationTimes = [];
+
+        for (let i = 0; i < numberOfNotifications; i++) {
+            const notificationTimeInMillis = startTime.getTime() + i * intervalInSeconds * 1000;
+            const notificationDate = new Date(notificationTimeInMillis);
+
+            notificationTimes.push({
+            hour: notificationDate.getHours(),
+            minute: notificationDate.getMinutes(),
+            });
+        }
+
+        console.log(notificationTimes)
+
+        const amountPerNotification = Math.round(((waterGoal / userSettings.reminderAmount) / userSettings.cupSize) * 2) / 2
+
+        console.log(amountPerNotification)
+
+        scheduleDailyNotifications(notificationTimes, amountPerNotification)
+
+    }
 
     const calculateAge = (dob) => {
         const today = new Date()
@@ -168,6 +206,7 @@ export const GlobalProvider = ({children}) => {
                 calculateWater,
                 userInfo,
                 setUserInfo,
+                scheduleNotifications
                 
             }}
         >
