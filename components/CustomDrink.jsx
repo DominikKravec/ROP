@@ -4,12 +4,11 @@ import IconButton from './IconButton'
 import icons from '../constants/icons'
 import { router } from 'expo-router'
 import { useGlobalContext } from '../context/globalProvider'
+import { removeDrink } from '../lib/appwrite'
 
 const CustomDrink = ({drink}) => {
 
-    const {setEditedDrink} = useGlobalContext()
-    
-    
+    const {setEditedDrink, customDrinks, setCustomDrinks} = useGlobalContext()
     
     const edit = () => {
         setEditedDrink(drink)
@@ -17,13 +16,19 @@ const CustomDrink = ({drink}) => {
     }
 
     const remove = () => {
-        //remove the drink here when the database is ready
+        try {
+            let drinksCopy = [...customDrinks]
+            drinksCopy.splice(drinksCopy.indexOf(drink))
+            setCustomDrinks(drinksCopy)
+            removeDrink(drink.$id)
+        } catch (error) {
+            console.log(error)
+        }
     }
-
     
     return (
-        <View className="flex flex-row w-[80vw] justify-center items-center">
-            <View className="border-2 border-blue rounded-[5000px] p-2 px-10">
+        <View className="flex flex-row w-[80vw] justify-center items-center mb-5">
+            <View className="border-2 border-blue rounded-[5000px] p-2 px-5 w-[53vw] justify-center items-center">
                 <Text className="text-xl text-blue">
                     {drink.name}
                 </Text>

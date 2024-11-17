@@ -1,5 +1,5 @@
 import { View, Text, FlatList } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useGlobalContext } from '../../context/globalProvider'
 import Button from '../../components/Button'
@@ -7,10 +7,24 @@ import { router } from 'expo-router'
 import icons from '../../constants/icons'
 import IconButton from '../../components/IconButton'
 import CustomDrink from '../../components/CustomDrink'
+import { getCustomDrinks } from '../../lib/appwrite'
 
 const customDrinks = () => {
 
-    const {customDrinks, setEditedDrink} = useGlobalContext()
+    const {customDrinks, setEditedDrink, setCustomDrinks, user} = useGlobalContext()
+
+    useEffect(() => {
+        const getDrinks = async () => {
+            try {
+                const drinks = await getCustomDrinks(user.$id)
+                setCustomDrinks(drinks)    
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        getDrinks()
+    }, [])
 
     const save = () => {
         router.replace("/profile")
@@ -20,7 +34,7 @@ const customDrinks = () => {
         <SafeAreaView className="justify-center items-center h-full p-10">
             <FlatList
                 data={customDrinks}
-                keyExtractor={(item) => {item.id}}
+                keyExtractor={(item) => {item.$id}}
                 ListEmptyComponent={() => (
                     <View>
                         <Text className="text-2xl text-blue-200 justify-center items-center m-5 text-center">

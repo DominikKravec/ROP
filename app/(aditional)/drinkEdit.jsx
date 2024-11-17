@@ -6,11 +6,12 @@ import Input from '../../components/Input.jsx'
 import Button from '../../components/Button.jsx'
 import { router } from 'expo-router'
 import InputUnit from '../../components/InputUnit.jsx'
+import { addCustomDrink, getCustomDrinks, updateDrink } from '../../lib/appwrite.js'
 
 const DrinkEdit = () => {
   const sugarUnitOptions = [{label: "g", value: 0}, {label: "oz", value: 1},]
 
-  const {editedDrink} = useGlobalContext()
+  const {editedDrink, user, setCustomDrinks, customDrinks} = useGlobalContext()
 
   const [name, setName] = useState(editedDrink ? editedDrink.name : "")
   const [sugar, setSugar] = useState(editedDrink ? editedDrink.sugar : 0)
@@ -18,11 +19,28 @@ const DrinkEdit = () => {
   const [calories, setCalories] = useState(editedDrink ? editedDrink.calories : 0)
   const [sugarUnit, setSugarUnit] = useState(sugarUnitOptions[0])
 
-  
+  const submit = async () => {
 
-
-  const submit = () => {
-    router.replace('/customDrinks')
+    if(!editedDrink){
+      try {
+        const newDrink = addCustomDrink(user.$id, name, parseFloat(calories), parseInt(apv), parseFloat(sugar))
+        setCustomDrinks([...customDrinks, newDrink])
+        router.replace('/customDrinks')    
+      } catch (error) {
+        console.log("Couldn't add drink due to: " + error)
+      }
+    }else{
+      try {
+        console.log(editedDrink)
+        const updatedDrink = await updateDrink(editedDrink.$id, name, parseFloat(calories), parseInt(apv), parseFloat(sugar))
+        const drinks = await getCustomDrinks(user.$id)
+        setCustomDrinks(drinks)
+        router.replace('/customDrinks')
+      } catch (error) {
+        console.log("Couldn't update drink due to: " + error)
+      }
+    }
+    
   }
   
   return (

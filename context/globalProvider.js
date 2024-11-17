@@ -21,7 +21,7 @@ export const GlobalProvider = ({children}) => {
     const [waterGoal, setWaterGoal] = useState(2500)
     const [userSettings, setUserSettings] = useState({})
 
-    const [customDrinks, setCustomDrinks] = useState([{id: 0,name: "CapriSun", sugar: 50, alcohol: 0, calories: 70}])
+    const [customDrinks, setCustomDrinks] = useState([])
 
     const [editedDrink, setEditedDrink] = useState(null)
     const [sugarFromDrinks, setSugarFromDrinks] = useState(0)
