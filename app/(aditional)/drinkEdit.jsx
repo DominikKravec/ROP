@@ -20,7 +20,6 @@ const DrinkEdit = () => {
   const [sugarUnit, setSugarUnit] = useState(sugarUnitOptions[0])
 
   const submit = async () => {
-
     if(!editedDrink){
       try {
         const newDrink = addCustomDrink(user.$id, name, parseFloat(calories), parseInt(apv), parseFloat(sugar))
@@ -40,7 +39,6 @@ const DrinkEdit = () => {
         console.log("Couldn't update drink due to: " + error)
       }
     }
-    
   }
   
   return (

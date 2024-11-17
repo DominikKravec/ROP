@@ -11,6 +11,7 @@ import { router } from 'expo-router'
 import CustomModal from '../../components/CustomModal.jsx'
 import { useGlobalContext } from '../../context/globalProvider.js'
 import { signOut } from '../../lib/appwrite.js'
+import { sendNotification } from '../../lib/notifications.js'
 
 const profile = () => {
 
@@ -22,6 +23,10 @@ const profile = () => {
 
   return (
     <SafeAreaView className="h-full px-5 bg-primary">
+      <Button 
+        title={'send notification'}
+        handle={() => {sendNotification(1.5)}}
+      />  
       <View className="flex-col ">
         <Text className="text-2xl text-blue">Logged in as</Text>
         <Text className="text-5xl text-blue mt-1">{user.username}</Text>

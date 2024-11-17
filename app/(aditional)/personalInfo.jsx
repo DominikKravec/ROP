@@ -9,6 +9,7 @@ import DatePicker from '../../components/DatePicker.jsx'
 import { getUserInfo, saveUserInfo } from '../../lib/appwrite.js'
 import { useGlobalContext } from '../../context/globalProvider.js'
 import { weightUnits } from '../../constants/units.js'
+import { schedulePushNotification } from '../../lib/notifications.js'
 
 const personalInfo = () => {
 
@@ -75,6 +76,7 @@ const personalInfo = () => {
 
   return (
     <SafeAreaView className="bg-primary h-full justify-center px-10 items-center">
+      
       <View className="w-[30vw]">
         <Text className="text-3xl text-blue">
           Weight:
