@@ -29,7 +29,6 @@ export const GlobalProvider = ({children}) => {
 
     const [editedDrink, setEditedDrink] = useState(null)
     const [sugarFromDrinks, setSugarFromDrinks] = useState(0)
-    const [temperature, setTemperature] = useState(null)
 
     const [userInfo, setUserInfo] = useState({})
 
@@ -60,8 +59,9 @@ export const GlobalProvider = ({children}) => {
     
             const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?units=metric&lat=${lat}&lon=${lon}&appid=${weatherApiKey}`)
             const weather = await response.json()
+            console.log(weather)
             console.log("It is " + weather.main.temp)
-            setTemperature(weather.main.temp)
+            return weather.main.temp
         } catch (error) {
             console.log("Couldn't get temperature due to: " + error)
         }
@@ -129,6 +129,8 @@ export const GlobalProvider = ({children}) => {
             }
 
             const weatherCalculation = true //remove this when you add it to settings
+
+            const temperature = await getCurrentTemperature()
 
             if(weatherCalculation){
                 if(temperature > 33){
@@ -254,8 +256,6 @@ export const GlobalProvider = ({children}) => {
                 setUserInfo,
                 scheduleNotifications,
                 getCurrentTemperature,
-                setTemperature,
-                temperature
             }}
         >
             {children}
