@@ -2,7 +2,8 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { getCurrentUser, getTodaysUserLogs, getUserInfo, getUserSettings } from "../lib/appwrite";
 import * as Notifications from 'expo-notifications'
 import { scheduleDailyNotifications } from "../lib/notifications";
-
+import { weatherApiKey } from "../constants/other";
+import * as Location from 'expo-location';
 
 const GlobalContext = createContext()
 export const useGlobalContext = () => useContext(GlobalContext)
@@ -28,10 +29,45 @@ export const GlobalProvider = ({children}) => {
 
     const [editedDrink, setEditedDrink] = useState(null)
     const [sugarFromDrinks, setSugarFromDrinks] = useState(0)
+    const [temperature, setTemperature] = useState(null)
 
     const [userInfo, setUserInfo] = useState({})
 
-    const scheduleNotifications = async () => {
+    const getCurrentLocation = async () => {
+            
+        try {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                console.log("Location permision not granted")
+                return;
+            }
+      
+            let location = await Location.getCurrentPositionAsync({});
+            return location
+        } catch (error) {
+            console.log("Failed to get location due to: " + error)
+        }
+
+    }
+
+    const getCurrentTemperature = async () => {
+        try {
+
+            const loca = await getCurrentLocation()
+
+            let lat = loca.coords.latitude
+            let lon = loca.coords.longitude
+    
+            const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?units=metric&lat=${lat}&lon=${lon}&appid=${weatherApiKey}`)
+            const weather = await response.json()
+            console.log("It is " + weather.main.temp)
+            setTemperature(weather.main.temp)
+        } catch (error) {
+            console.log("Couldn't get temperature due to: " + error)
+        }
+    }
+
+    const scheduleNotifications = async (amountOfNotifications) => {
 
         Notifications.cancelAllScheduledNotificationsAsync()
         const startTime = new Date();
@@ -41,7 +77,7 @@ export const GlobalProvider = ({children}) => {
         endTime.setHours(22, 0, 0, 0); //change this to the users choice
 
         const totalDurationInSeconds = (endTime - startTime) / 1000; 
-        const numberOfNotifications = userSettings.reminderAmount; 
+        const numberOfNotifications = amountOfNotifications; 
         const intervalInSeconds = totalDurationInSeconds / (numberOfNotifications - 1);
 
         let notificationTimes = [];
@@ -90,6 +126,16 @@ export const GlobalProvider = ({children}) => {
             while(age >= 0){
                 goal += 350
                 age -= 10
+            }
+
+            const weatherCalculation = true //remove this when you add it to settings
+
+            if(weatherCalculation){
+                if(temperature > 33){
+                    goal += 1000
+                }else if(temperature > 25){
+                    goal += 500
+                }
             }
 
             setWaterGoal(Math.round(goal))
@@ -206,8 +252,10 @@ export const GlobalProvider = ({children}) => {
                 calculateWater,
                 userInfo,
                 setUserInfo,
-                scheduleNotifications
-                
+                scheduleNotifications,
+                getCurrentTemperature,
+                setTemperature,
+                temperature
             }}
         >
             {children}

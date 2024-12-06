@@ -25,9 +25,13 @@ const ReminderAmountModal = ({closeModal}) => {
             title={'Set reminder amount to ' + amount}
             containerStyles={'mt-5'}
             handle={() => {
+              updateUserSettings(user.$id, {...userSettings, reminderAmount: amount})
               setUserSettings({...userSettings, reminderAmount: amount})
-              updateUserSettings(user.$id, userSettings)
-              scheduleNotifications()
+              setTimeout(() => {
+                scheduleNotifications(amount)
+                console.log(userSettings)
+              }, 2000)
+              
               closeModal()
             }}  
         />

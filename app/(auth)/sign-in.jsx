@@ -5,7 +5,7 @@ import Button from '../../components/Button'
 import Input from '../../components/Input'
 import { TouchableOpacity } from 'react-native'
 import { Link, router } from 'expo-router'
-import { signIn, getCurrentUser } from '../../lib/appwrite'
+import { signIn, getCurrentUser, getUserSettings } from '../../lib/appwrite'
 import { useGlobalContext } from '../../context/globalProvider'
 
 
@@ -26,7 +26,8 @@ const SignIn = () => {
         const result = await getCurrentUser();
         setUser(result)
         setIsLoggedIn(true)
-        scheduleNotifications()
+        const userSettings = await getUserSettings(result.$id)
+        scheduleNotifications(userSettings.reminderAmount)
         router.replace('/home')
       } catch (error) {
         console.log(error)

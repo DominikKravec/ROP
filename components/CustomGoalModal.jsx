@@ -4,6 +4,7 @@ import InputUnit from './InputUnit';
 import Button from './Button';
 import { useGlobalContext } from '../context/globalProvider';
 import { updateUserSettings } from '../lib/appwrite';
+import { volumeUnits } from '../constants/units';
 
 const CustomGoalModal = ({closeModal}) => {
 
@@ -16,7 +17,7 @@ const CustomGoalModal = ({closeModal}) => {
     const [unit, setUnit] = useState(options[0].label)
     const [amount, setAmount] = useState(0)
 
-    const {user, userSettings, setUserSettings, setWaterGoal} = useGlobalContext()
+    const {user, userSettings, setUserSettings, setWaterGoal, calculateWater} = useGlobalContext()
 
     return (
       <View>
@@ -34,11 +35,22 @@ const CustomGoalModal = ({closeModal}) => {
             title={'Set goal to ' + amount + unit}
             containerStyles={'mt-5'}
             handle={() => {
-              setUserSettings({...userSettings, customWaterGoal: amount})
-              updateUserSettings(user.$id, userSettings)
-              setWaterGoal(userSettings.customWaterGoal)
+              setUserSettings({...userSettings, customWaterGoal: (parseFloat(amount) * volumeUnits[unit])})
+              updateUserSettings(user.$id, {...userSettings, customWaterGoal: (parseFloat(amount) * volumeUnits[unit])})
+              setWaterGoal((parseFloat(amount) * volumeUnits[unit]))
               closeModal()
             }}  
+        />
+
+        <Button
+          title="Remove custom goal"
+          containerStyles={'mt-5'}
+          handle={() => {
+            setUserSettings({...userSettings, customWaterGoal: null})
+            updateUserSettings(user.$id, {...userSettings, customWaterGoal: null})
+            setWaterGoal(calculateWater())
+            closeModal()
+          }}
         />
 
       </View>

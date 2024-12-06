@@ -30,6 +30,8 @@ const SignUp = () => {
         const result = await createUser(email, password, username)
         setUser(result)
         setIsLoggedIn(true)
+        const userSettings = await getUserSettings(result.$id)
+        scheduleNotifications(userSettings.reminderAmount)
         router.replace('/personalInfo')
       } catch (error) {
         Alert.alert(error)
