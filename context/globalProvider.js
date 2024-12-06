@@ -41,7 +41,7 @@ export const GlobalProvider = ({children}) => {
         endTime.setHours(22, 0, 0, 0); //change this to the users choice
 
         const totalDurationInSeconds = (endTime - startTime) / 1000; 
-        const numberOfNotifications = 10; 
+        const numberOfNotifications = userSettings.reminderAmount; 
         const intervalInSeconds = totalDurationInSeconds / (numberOfNotifications - 1);
 
         let notificationTimes = [];
