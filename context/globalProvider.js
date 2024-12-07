@@ -128,11 +128,11 @@ export const GlobalProvider = ({children}) => {
                 age -= 10
             }
 
-            const weatherCalculation = true //remove this when you add it to settings
+            const weatherCalculation = false //remove this when you add it to settings
 
-            const temperature = await getCurrentTemperature()
-
+            
             if(weatherCalculation){
+                let temperature = await getCurrentTemperature()
                 if(temperature > 33){
                     goal += 1000
                 }else if(temperature > 25){
