@@ -17,7 +17,7 @@ const AddDrinkModal = ({drinkOptions, setModal}) => {
         {label: 'oz', value: 2}
     ]
 
-    const {user, userSettings, setWaterDrank, waterDrank} = useGlobalContext()
+    const {user, userSettings, setWaterDrank, waterDrank, getInfoFromDrinks} = useGlobalContext()
   
     const [unit, setUnit] = useState(options[0].label)
     const [amount, setAmount] = useState(0)
@@ -27,7 +27,7 @@ const AddDrinkModal = ({drinkOptions, setModal}) => {
       try {
         console.log(volumeUnits[unit])
         createLog(user.$id, drinkType.$id, (parseFloat(amount) * volumeUnits[unit]), new Date())
-        setWaterDrank(waterDrank + parseFloat(amount) * volumeUnits[unit])
+        getInfoFromDrinks()
         setModal(false)
       } catch (error) {
         console.log("Failed to add drink due too: " + error)

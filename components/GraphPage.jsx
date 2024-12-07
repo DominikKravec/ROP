@@ -7,7 +7,7 @@ import { getWeekLogs } from '../lib/appwrite'
 
 const GraphPage = () => {
 
-  const {sugarFromDrinks, user} = useGlobalContext()
+  const {sugarFromDrinks, user, caloriesFromDrinks, getInfoFromDrinks} = useGlobalContext()
   //add calories and alcohol level
 
   const [weeklyWater, setWeeklyWater] = useState([])
@@ -24,7 +24,6 @@ const GraphPage = () => {
           let date = new Date()
           date.setDate(date.getDate() - i)
           let label = "" + date.getDate() + "." + (date.getMonth() + 1)
-          console.log({label: label, value: 0})
 
           dailyInfo.push({label: label, value: 0}) 
         }
@@ -34,16 +33,12 @@ const GraphPage = () => {
           let label = "" + date.getDate() + "." + (date.getMonth() + 1)
 
           for(idx in dailyInfo){
-            console.log(dailyInfo[idx])
-            console.log(label)
+
             if(dailyInfo[idx].label == label){
               dailyInfo[idx].value += log.volume
             }
           }
         })
-
-        console.log(dailyInfo)
-
         setWeeklyWater(dailyInfo.reverse())
         
       } catch (error) {
@@ -53,6 +48,7 @@ const GraphPage = () => {
     }
 
     getLogs()
+    getInfoFromDrinks()
 
   }, [])
 
@@ -64,7 +60,7 @@ const GraphPage = () => {
         <View className="border-2 border-blue p-5 rounded-2xl">
           <View className=" w-[70vw] justify-center items-center p-2">
             <Text className="text-2xl text-blue">
-              Sugar from drinks: {sugarFromDrinks}
+              Sugar from drinks: {sugarFromDrinks}g
             </Text>
           </View>
           <View className=" w-[70vw] justify-center items-center p-2 mt-5">
@@ -76,7 +72,7 @@ const GraphPage = () => {
           </View>
           <View className=" w-[70vw] justify-center items-center p-2 mt-5">
             <Text className="text-2xl text-blue">
-              Calories: {sugarFromDrinks /* change this to calories */}
+              Calories: {caloriesFromDrinks}
             </Text>
           </View>
         </View>

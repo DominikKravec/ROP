@@ -29,6 +29,8 @@ export const GlobalProvider = ({children}) => {
 
     const [editedDrink, setEditedDrink] = useState(null)
     const [sugarFromDrinks, setSugarFromDrinks] = useState(0)
+    const [caloriesFromDrinks, setCaloriesFromDrinks] = useState(0)
+    const [alcoholFromDrinks, setAlcoholFromDrinks] = useState(0)
 
     const [userInfo, setUserInfo] = useState({})
 
@@ -170,6 +172,31 @@ export const GlobalProvider = ({children}) => {
         
     }, [])
 
+    const getInfoFromDrinks = async () => {
+        if(user && user.$id){
+            try {
+                const todaysLogs = await getTodaysUserLogs(user.$id)
+
+                let waterDrankToday = 0
+                let sugarFromDrinksToday = 0
+                let caloriesFromDrinksToday = 0
+                let alcoholFromDrinksToday = 0
+
+                todaysLogs.forEach(log => {
+                    waterDrankToday += log.volume
+                    sugarFromDrinksToday += (parseFloat(log.drink.sugar) / 100) * log.volume
+                    caloriesFromDrinksToday += (parseFloat(log.drink.calories) / 100) * log.volume
+                })
+                console.log(sugarFromDrinksToday)
+                setWaterDrank(waterDrankToday)
+                setSugarFromDrinks(sugarFromDrinksToday)
+                setCaloriesFromDrinks(caloriesFromDrinksToday)
+            } catch (error) {
+                console.log("Couldn't calculate water drank due too: " + error)
+            }
+        }
+    }
+
     useEffect(() => {
         const aplyUserSettings = async () => {
             if(user && user.$id){
@@ -179,7 +206,7 @@ export const GlobalProvider = ({children}) => {
                     if(settings.customWaterGoal){
                         setWaterGoal(settings.customWaterGoal)
                     }
-                    //console.log('settings aplied')
+                    
     
                 } catch (error) {
                     console.log(error)
@@ -198,28 +225,10 @@ export const GlobalProvider = ({children}) => {
             }
         }
 
-        const getWaterDrank = async () => {
-            if(user && user.$id){
-                try {
-                    const todaysLogs = await getTodaysUserLogs(user.$id)
-
-                    let waterDrankToday = 0
-
-                    todaysLogs.forEach(log => {
-                        waterDrankToday += log.volume
-                    })
-
-                    setWaterDrank(waterDrankToday)
-                } catch (error) {
-                    console.log("Couldn't calculate water drank due too: " + error)
-                }
-            }
-        }
-
         aplyUserInfo()
         calculateWater()
         aplyUserSettings()
-        getWaterDrank()
+        getInfoFromDrinks()
     }, [user])
 
     return (
@@ -256,6 +265,9 @@ export const GlobalProvider = ({children}) => {
                 setUserInfo,
                 scheduleNotifications,
                 getCurrentTemperature,
+                caloriesFromDrinks, 
+                alcoholFromDrinks,
+                getInfoFromDrinks
             }}
         >
             {children}

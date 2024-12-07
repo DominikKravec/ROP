@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 
 const WaterInfoPage = () => {
 
-    const {userSettings, waterDrank, waterGoal, user, setWaterDrank, getCurrentTemperature} = useGlobalContext()
+    const {userSettings, waterDrank, waterGoal, user, setWaterDrank, getCurrentTemperature, getInfoFromDrinks} = useGlobalContext()
 
     const [unit, setUnit] = useState('ml')
 
@@ -45,8 +45,8 @@ const WaterInfoPage = () => {
 
     const quickCup = async () => {
         try {
-            createLog(user.$id, waterId, userSettings.cupSize, new Date())
-            setWaterDrank(waterDrank + parseFloat(userSettings.cupSize))
+            await createLog(user.$id, waterId, userSettings.cupSize, new Date())
+            getInfoFromDrinks()
         } catch (error) {
             console.log("Failed to add cup due too: " + error)
         }
@@ -60,7 +60,7 @@ const WaterInfoPage = () => {
             console.log(lastLog)
 
             createLog(user.$id, lastLog.drink.$id, parseFloat(lastLog.volume), new Date())
-            setWaterDrank(waterDrank + lastLog.volume)
+            getInfoFromDrinks()
 
         } catch (error) {
             console.log("Failed to add previous drink due too: " + error)
