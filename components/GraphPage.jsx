@@ -7,7 +7,7 @@ import { getWeekLogs } from '../lib/appwrite'
 
 const GraphPage = () => {
 
-  const {sugarFromDrinks, user, caloriesFromDrinks, getInfoFromDrinks} = useGlobalContext()
+  const {sugarFromDrinks, user, caloriesFromDrinks, getInfoFromDrinks, alcoholLevel, timeTillAlcZero} = useGlobalContext()
   //add calories and alcohol level
 
   const [weeklyWater, setWeeklyWater] = useState([])
@@ -65,8 +65,8 @@ const GraphPage = () => {
           </View>
           <View className=" w-[70vw] justify-center items-center p-2 mt-5">
             <Text className="text-2xl text-blue">
-              Alcohol level: {sugarFromDrinks /* change this to alcohol level */} {"\n"} 
-              Time untill 0: 2h  {/* change this when working with alcohol level */}
+              Alcohol level: {alcoholLevel > 0 ? Math.round(alcoholLevel * 100) / 100 : 0}%
+              {alcoholLevel > 0 ? `\nTime untill 0: ${Math.round(timeTillAlcZero * 10) / 10}h` : ''} {/* change this when working with alcohol level */}
             </Text>
             
           </View>

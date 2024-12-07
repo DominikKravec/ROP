@@ -31,6 +31,8 @@ export const GlobalProvider = ({children}) => {
     const [sugarFromDrinks, setSugarFromDrinks] = useState(0)
     const [caloriesFromDrinks, setCaloriesFromDrinks] = useState(0)
     const [alcoholFromDrinks, setAlcoholFromDrinks] = useState(0)
+    const [alcoholLevel, setAlcoholLevel] = useState(0)
+    const [timeTillAlcZero, setTimeTillAlcZero] = useState(0)
 
     const [userInfo, setUserInfo] = useState({})
 
@@ -182,15 +184,41 @@ export const GlobalProvider = ({children}) => {
                 let caloriesFromDrinksToday = 0
                 let alcoholFromDrinksToday = 0
 
+                let hours = 0
+                let alcoholDrank = false
+
                 todaysLogs.forEach(log => {
                     waterDrankToday += log.volume
                     sugarFromDrinksToday += (parseFloat(log.drink.sugar) / 100) * log.volume
                     caloriesFromDrinksToday += (parseFloat(log.drink.calories) / 100) * log.volume
+
+                    if(!alcoholDrank && log.drink.apv > 0){
+                        alcoholDrank = true
+                        const timeOfDrink = new Date(log.timeOfDrink)
+                        const dateNow = new Date()
+
+                        let diff = dateNow - timeOfDrink
+                        hours = diff / (1000 * 60 * 60)
+                        console.log("Hours since fisrt drink: " + hours)
+
+                    }
+
+                    alcoholFromDrinksToday += parseFloat(log.volume) * parseFloat(log.drink.apv) / 100 * 0.789
                 })
-                console.log(sugarFromDrinksToday)
+                
                 setWaterDrank(waterDrankToday)
                 setSugarFromDrinks(sugarFromDrinksToday)
                 setCaloriesFromDrinks(caloriesFromDrinksToday)
+                setAlcoholFromDrinks(alcoholFromDrinksToday)
+
+                const {gender, weight} = await getUserInfo(user.$id);
+
+                let alcoholLevelBeforeTime = (alcoholFromDrinksToday / (weight * (gender == 'male' ? 0.68 : 0.55))) / 10
+                let alcoholLevelNow = (alcoholLevelBeforeTime - 0.015 * hours) 
+                let timeTillZero = (alcoholLevelBeforeTime - alcoholLevelNow) / 0.015 * 10
+                console.log("time until zero: " + timeTillZero)
+                setAlcoholLevel(alcoholLevelNow)
+                setTimeTillAlcZero(timeTillZero)
             } catch (error) {
                 console.log("Couldn't calculate water drank due too: " + error)
             }
@@ -219,6 +247,7 @@ export const GlobalProvider = ({children}) => {
                 try {
                     const info = await getUserInfo(user.$id)
                     setUserInfo(info)    
+                    
                 } catch (error) {
                     console.log(error)
                 }
@@ -226,8 +255,8 @@ export const GlobalProvider = ({children}) => {
         }
 
         aplyUserInfo()
-        calculateWater()
         aplyUserSettings()
+        calculateWater()
         getInfoFromDrinks()
     }, [user])
 
@@ -267,7 +296,10 @@ export const GlobalProvider = ({children}) => {
                 getCurrentTemperature,
                 caloriesFromDrinks, 
                 alcoholFromDrinks,
-                getInfoFromDrinks
+                getInfoFromDrinks,
+                alcoholLevel,
+                setAlcoholLevel,
+                timeTillAlcZero
             }}
         >
             {children}
