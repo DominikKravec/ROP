@@ -71,7 +71,8 @@ export const GlobalProvider = ({children}) => {
         }
     }
 
-    const scheduleNotifications = async (amountOfNotifications) => {
+    const scheduleNotifications = async (waterGoal) => {
+        const {reminderAmount, cupSize} = await getUserSettings(user.$id);
 
         Notifications.cancelAllScheduledNotificationsAsync()
         const startTime = new Date();
@@ -81,7 +82,7 @@ export const GlobalProvider = ({children}) => {
         endTime.setHours(22, 0, 0, 0); //change this to the users choice
 
         const totalDurationInSeconds = (endTime - startTime) / 1000; 
-        const numberOfNotifications = amountOfNotifications; 
+        const numberOfNotifications = reminderAmount; 
         const intervalInSeconds = totalDurationInSeconds / (numberOfNotifications - 1);
 
         let notificationTimes = [];
@@ -98,9 +99,9 @@ export const GlobalProvider = ({children}) => {
 
         console.log(notificationTimes)
 
-        const amountPerNotification = Math.round(((waterGoal / userSettings.reminderAmount) / userSettings.cupSize) * 2) / 2
+        const amountPerNotification = Math.ceil(((waterGoal / reminderAmount) / cupSize) * 2) / 2;
 
-        console.log(amountPerNotification)
+        console.log(`At cup size ${cupSize} and reminder amount ${reminderAmount} with a water goal ${waterGoal} you should drink ${amountPerNotification} cups of water per notification`)
 
         scheduleDailyNotifications(notificationTimes, amountPerNotification)
 
@@ -145,6 +146,7 @@ export const GlobalProvider = ({children}) => {
             }
 
             setWaterGoal(Math.round(goal))
+            scheduleNotifications(Math.round(goal))
         }catch(error){
             console.log(error)
         }
@@ -256,8 +258,8 @@ export const GlobalProvider = ({children}) => {
 
         aplyUserInfo()
         aplyUserSettings()
-        calculateWater()
         getInfoFromDrinks()
+        calculateWater()
     }, [user])
 
     return (

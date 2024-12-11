@@ -10,7 +10,6 @@ import { createLog, getUserDrinks, getUserLogs } from '../lib/appwrite'
 import { waterId } from '../constants/other'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-
 const WaterInfoPage = () => {
 
     const {userSettings, waterDrank, waterGoal, user, setWaterDrank, getCurrentTemperature, getInfoFromDrinks} = useGlobalContext()
@@ -42,7 +41,6 @@ const WaterInfoPage = () => {
         }
     }, userSettings)
 
-
     const quickCup = async () => {
         try {
             await createLog(user.$id, waterId, userSettings.cupSize, new Date())
@@ -59,7 +57,7 @@ const WaterInfoPage = () => {
 
             console.log(lastLog)
 
-            createLog(user.$id, lastLog.drink.$id, parseFloat(lastLog.volume), new Date())
+            await createLog(user.$id, lastLog.drink.$id, parseFloat(lastLog.volume), new Date())
             getInfoFromDrinks()
 
         } catch (error) {

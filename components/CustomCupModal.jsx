@@ -17,7 +17,7 @@ const CustomCupModal = ({closeModal}) => {
     const [unit, setUnit] = useState(options[0].label)
     const [amount, setAmount] = useState(0)
 
-    const {userSettings, setUserSettings, user} = useGlobalContext()
+    const {userSettings, setUserSettings, user, calculateWater} = useGlobalContext()
 
     return (
       <View>
@@ -37,7 +37,8 @@ const CustomCupModal = ({closeModal}) => {
             handle={() => {
               try{
                 setUserSettings({...userSettings, cupSize: (parseFloat(amount) * volumeUnits[unit])})
-                updateUserSettings(user.$id, userSettings)
+                updateUserSettings(user.$id, {...userSettings, cupSize: (parseFloat(amount) * volumeUnits[unit])})
+                calculateWater()
                 closeModal()
               }catch (error){
                 console.log(error)

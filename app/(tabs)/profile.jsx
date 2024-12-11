@@ -19,16 +19,8 @@ const profile = () => {
   const [modalContent, setModalContent] = useState(null)
   const {user, setUser, setIsLoggedIn} = useGlobalContext()
 
-  
-
   return (
     <SafeAreaView className="h-full px-5 bg-primary">
-      {/*
-      <Button 
-        title={'send notification'}
-        handle={() => {sendNotification(1.5)}}
-      />  
-       */}
       <View className="flex-col ">
         <Text className="text-2xl text-blue">Logged in as</Text>
         <Text className="text-5xl text-blue mt-1">{user.username}</Text>
@@ -54,7 +46,7 @@ const profile = () => {
           handle={() => { setModal(true); setModalContent(<CustomCupModal closeModal={() => {setModal(false)}}/>)}}
           containerStyles={'mt-5'}
         />
-                <Button
+        <Button
           title="Edit custom drinks"
           handle={() => {router.push("/customDrinks")}}
           containerStyles={'mt-5'}
@@ -70,6 +62,24 @@ const profile = () => {
           containerStyles={'mt-5'}
           customColor={'pink-100'}
         />
+
+        {(user.username == 'Tester') && (
+          <Button
+            title={"Tester options"}
+            containerStyles={'mt-5'}
+            handle={() => {
+              setModal(true);
+              setModalContent(
+                <View>
+                  <Button
+                    title="Send notification"
+                    handle={() => {sendNotification()}}
+                  />
+                </View>
+              )
+            }}
+          />
+        )}
       </View>
 
       <CustomModal

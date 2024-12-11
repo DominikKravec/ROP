@@ -23,10 +23,9 @@ const AddDrinkModal = ({drinkOptions, setModal}) => {
     const [amount, setAmount] = useState(0)
     const [drinkType, setDrinkType] = useState(drinkOptions[0])
 
-    const submit = () => {
+    const submit = async () => {
       try {
-        console.log(volumeUnits[unit])
-        createLog(user.$id, drinkType.$id, (parseFloat(amount) * volumeUnits[unit]), new Date())
+        await createLog(user.$id, drinkType.$id, (parseFloat(amount) * volumeUnits[unit]), new Date())
         getInfoFromDrinks()
         setModal(false)
       } catch (error) {

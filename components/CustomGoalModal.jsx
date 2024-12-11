@@ -38,6 +38,7 @@ const CustomGoalModal = ({closeModal}) => {
               setUserSettings({...userSettings, customWaterGoal: (parseFloat(amount) * volumeUnits[unit])})
               updateUserSettings(user.$id, {...userSettings, customWaterGoal: (parseFloat(amount) * volumeUnits[unit])})
               setWaterGoal((parseFloat(amount) * volumeUnits[unit]))
+              calculateWater()
               closeModal()
             }}  
         />

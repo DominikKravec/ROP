@@ -7,7 +7,7 @@ import { TouchableOpacity } from 'react-native'
 import { Link, router } from 'expo-router'
 import { signIn, getCurrentUser, getUserSettings } from '../../lib/appwrite'
 import { useGlobalContext } from '../../context/globalProvider'
-
+import CustomModal from '../../components/CustomModal'
 
 const SignIn = () => {
 
@@ -19,6 +19,9 @@ const SignIn = () => {
   const [password, setPassword] = useState('')
   const {setUser, setIsLoggedIn, scheduleNotifications} = useGlobalContext()
 
+  const [modal, setModal] = useState(false)
+  const [modalText, setModalText] = useState('')
+
   const submit = async () => {
     if(email.trim() && password.trim() && isValidEmail(email.trim())){
       try {
@@ -27,10 +30,23 @@ const SignIn = () => {
         setUser(result)
         setIsLoggedIn(true)
         const userSettings = await getUserSettings(result.$id)
-        scheduleNotifications(userSettings.reminderAmount)
         router.replace('/home')
       } catch (error) {
+        if(error + "" == 'Error: AppwriteException: Invalid credentials. Please check the email and password.'){
+          setModalText("User with theese credentials does not exist")
+          setModal(true)
+        }
         console.log(error)
+      }
+    }else{
+      if(!email.trim() || !password.trim()){
+        setModalText("Please fill in all the fields")
+        setModal(true)
+      }
+
+      if(!isValidEmail(email.trim())){
+        setModalText("Please enter a valid email format")
+        setModal(true)
       }
     }
   }
@@ -62,6 +78,16 @@ const SignIn = () => {
           <Link href="/sign-up" className="text-sm text-blue"> Sign Up </Link>
         </View>
       </View>
+
+      <CustomModal
+        modal={modal}
+        setModal={setModal}
+        modalContent={(
+          <View>
+            <Text className="text-2xl text-red-100">{modalText}</Text>
+          </View>
+        )}
+      />
     </SafeAreaView>
   )
 }
