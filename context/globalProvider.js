@@ -133,7 +133,7 @@ export const GlobalProvider = ({children}) => {
                 age -= 10
             }
 
-            const weatherCalculation = false //remove this when you add it to settings
+            const weatherCalculation = true //remove this when you add it to settings
 
             
             if(weatherCalculation){

@@ -15,6 +15,7 @@ const MonthModal = ({month, setMonth, setModal}) => {
   
     return (
       <View className="justify-center items-center">
+        <Text className="text-xl text-blue-200">Month</Text>
         <TextInput
               className='border-b-2 border-b-blue text-2xl w-18 text-blue'
               keyboardType='number-pad'
