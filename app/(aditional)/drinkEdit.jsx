@@ -20,6 +20,9 @@ const DrinkEdit = () => {
   const [sugarUnit, setSugarUnit] = useState(sugarUnitOptions[0])
 
   const submit = async () => {
+
+    if(apv > 100) setApv(100)
+
     if(!editedDrink){
       try {
         const newDrink = addCustomDrink(user.$id, name, parseFloat(calories), parseInt(apv), parseFloat(sugar))

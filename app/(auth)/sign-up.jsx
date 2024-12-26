@@ -5,7 +5,7 @@ import Button from '../../components/Button'
 import Input from '../../components/Input'
 import { TouchableOpacity } from 'react-native'
 import { Link, router } from 'expo-router'
-import { createUser } from '../../lib/appwrite'
+import { createUser, getUserSettings } from '../../lib/appwrite'
 import { useGlobalContext } from '../../context/globalProvider'
 import CustomModal from '../../components/CustomModal'
 
@@ -30,11 +30,15 @@ const SignUp = () => {
         const result = await createUser(email, password, username)
         setUser(result)
         setIsLoggedIn(true)
-        const userSettings = await getUserSettings(result.$id)
-        scheduleNotifications(userSettings.reminderAmount)
         router.replace('/personalInfo')
       } catch (error) {
-        Alert.alert(error)
+        if(error + '' == 'Error: AppwriteException: A user with the same id, email, or phone already exists in this project.'){
+          setModal(true)
+          setModalText('User with the same email already exists')
+        }else{
+          console.log("Couldn't register due to: " + error)
+          Alert.alert(error)
+        }
       }
     }else{
       if(!username.trim() || !email.trim() || !password.trim()){

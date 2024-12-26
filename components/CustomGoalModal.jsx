@@ -14,10 +14,10 @@ const CustomGoalModal = ({closeModal}) => {
       {label: 'oz', value: 2}
     ]
 
-    const [unit, setUnit] = useState(options[0].label)
-    const [amount, setAmount] = useState(0)
-
     const {user, userSettings, setUserSettings, setWaterGoal, calculateWater} = useGlobalContext()
+    
+    const [unit, setUnit] = useState(options[0].label)
+    const [amount, setAmount] = useState(userSettings.customWaterGoal)
 
     return (
       <View>

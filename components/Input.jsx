@@ -6,15 +6,13 @@ import { icons } from '../constants'
 const Input = ({ title, value, placeholder, handleChangeText, otherStyles, ...props}) => {
   const [showPassword, setShowPassword] = useState(false)
 
-  console.log("Value in input: " + value)
-
   return (
     <View className={`space-y-2 ${otherStyles}`}>
       <View className="w-[65vw] h-14 px-4 rounded-[5000px] items-center flex-row border-2 border-blue">
         <TextInput
             className="flex-1 text-blue text-xl"
             value={value}
-            defaultValue={value + ""}
+            defaultValue={(value ? value + "" : 0)}
             placeholder={placeholder}
             placeholderTextColor="#A5D9FF"
             onChangeText={handleChangeText}

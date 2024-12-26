@@ -34,7 +34,7 @@ export const GlobalProvider = ({children}) => {
     const [alcoholLevel, setAlcoholLevel] = useState(0)
     const [timeTillAlcZero, setTimeTillAlcZero] = useState(0)
 
-    const [userInfo, setUserInfo] = useState({})
+    const [userInfo, setUserInfo] = useState({weight: 60, dateOfBirth: Date.now(), gender: 'female'})
 
     const getCurrentLocation = async () => {
             

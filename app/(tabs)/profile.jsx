@@ -60,7 +60,7 @@ const profile = () => {
             router.replace('/sign-in') 
           }}
           containerStyles={'mt-5'}
-          customColor={'pink-100'}
+          customColor={'blue'}
         />
 
         {(user.username == 'Tester') && (

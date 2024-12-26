@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { Dropdown } from 'react-native-element-dropdown'
 
 const InputUnit = ({options, value, unit, handleChangeText, handleChangeUnit}) => {
-
   return (
     <View className='flex flex-row justify-center h-10 items-center'>
         <TextInput
@@ -11,7 +10,7 @@ const InputUnit = ({options, value, unit, handleChangeText, handleChangeUnit}) =
             onChangeText={handleChangeText}
             value={value}
             keyboardType='number-pad'
-            defaultValue={value + ""}
+            defaultValue={(value ? value + "" : 0)}
         />
         <Text className="text-blue text-2xl">{unit}</Text>
         <Dropdown

@@ -14,10 +14,10 @@ const CustomCupModal = ({closeModal}) => {
       {label: 'oz', value: 2}
     ]
 
-    const [unit, setUnit] = useState(options[0].label)
-    const [amount, setAmount] = useState(0)
-
     const {userSettings, setUserSettings, user, calculateWater} = useGlobalContext()
+    
+    const [unit, setUnit] = useState(options[0].label)
+    const [amount, setAmount] = useState(userSettings.cupSize)
 
     return (
       <View>
@@ -45,7 +45,6 @@ const CustomCupModal = ({closeModal}) => {
               }
             }}  
         />
-
       </View>
     )
 }
