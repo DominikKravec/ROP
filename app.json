@@ -31,7 +31,8 @@
         {
           "icon": "./assets/images/icon_white.png"
         }
-      ]
+      ],
+      "react-native-health-connect"
     ],
     "experiments": {
       "typedRoutes": true
