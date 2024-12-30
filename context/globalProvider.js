@@ -1,17 +1,21 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { getCurrentUser, getTodaysUserLogs, getUserInfo, getUserSettings } from "../lib/appwrite";
+import { createLog, getCurrentUser, getTodaysUserLogs, getUserInfo, getUserSettings } from "../lib/appwrite";
 import * as Notifications from 'expo-notifications'
 import { scheduleDailyNotifications } from "../lib/notifications";
 import { weatherApiKey } from "../constants/other";
 import * as Location from 'expo-location';
-import { getStoredLogs, getStoredUser, getStoredUserInfo, getStoredUserSttings, storeUser, storeUserInfo, storeUserSettings } from "../lib/asyncStorage";
+import { emptyLogStorage, getStoredLogs, getStoredUser, getStoredUserInfo, getStoredUserSttings, storeUser, storeUserInfo, storeUserSettings } from "../lib/asyncStorage";
+import { useNetInfo } from "@react-native-community/netinfo";
+
 
 const GlobalContext = createContext()
 export const useGlobalContext = () => useContext(GlobalContext)
 
 export const GlobalProvider = ({children}) => {
 
-    const [isOffline, setIsOffline] = useState(true) // set this to false after testing offline mode
+    const netInfo = useNetInfo()
+
+    const [isOffline, setIsOffline] = useState(netInfo.isConnected && netInfo.isInternetReachable) 
 
     const [user, setUser] = useState('')
     const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -41,8 +45,7 @@ export const GlobalProvider = ({children}) => {
     const [userInfo, setUserInfo] = useState({weight: 60, dateOfBirth: Date.now(), gender: 'female'})
     
     //function to be calles when app starts that gets the logged in user if one exists
-    useEffect(() => {
-
+    useEffect(() => {      
         if(!isOffline){
             console.log("Getting user from db")
             getCurrentUser()
@@ -53,6 +56,7 @@ export const GlobalProvider = ({children}) => {
                         setIsLoggedIn(true)
                         setUser(res)
                         storeUser(res)
+                        handleRegainedConnection(res.$id)
                     }else{
                         setIsLoggedIn(false)
                         setUser(null)
@@ -70,8 +74,6 @@ export const GlobalProvider = ({children}) => {
                     if(res){
                         setUser(res)
                         setIsLoggedIn(true)
-                        console.log('User has been set')
-                        console.log(user)
                     }else{
                         setUser(null)
                         setIsLoggedIn(false)
@@ -142,6 +144,21 @@ export const GlobalProvider = ({children}) => {
         calculateWater()
     
     }, [user])
+
+    const handleRegainedConnection = async (userId) => {
+
+        console.log("Handling regained connection")
+        
+        const logs = await getStoredLogs()
+
+        if(logs){
+            logs.forEach(log => {
+                createLog(userId, log.drink, log.volume, log.timeOfDrink)
+            })
+        }
+
+        emptyLogStorage()
+    }
 
     const getCurrentLocation = async () => {
         
@@ -280,8 +297,6 @@ export const GlobalProvider = ({children}) => {
                     todaysLogs = await getStoredLogs()
                 }
 
-                console.log(todaysLogs)
-                
                 let waterDrankToday = 0
                 let sugarFromDrinksToday = 0
                 let caloriesFromDrinksToday = 0
