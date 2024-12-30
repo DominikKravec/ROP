@@ -7,26 +7,22 @@ import { useGlobalContext } from '../context/globalProvider'
 
 const index = () => {
 
-  const {lastResetDate, setLastResetDate, setWaterDrank} = useGlobalContext()
-  const todayDate = new Date().toISOString().split('T')[0];
-
-  const {isLoggedIn} = useGlobalContext()
-
-  if( lastResetDate !== todayDate){
-    setWaterDrank(0)
-    setLastResetDate(todayDate)
-  }
+  const {isLoggedIn, isOffline} = useGlobalContext()
 
   if(isLoggedIn) return <Redirect href="/home"/>
 
   return (
     <View className="justify-center items-center h-full bg-primary">
       <Text className="text-blue text-2xl">Welcome to Health Reminder</Text>
-      <Button
+      {isOffline ? 
+        <Text className="text-blue text-lg w-[75vw] text-center">You are offline. You need to connect to a network to log in. After that you can use this app even if you are offline. </Text> 
+        : 
+        <Button
         title={'Continue'}
         handle={() => {router.push('sign-in')}}
         containerStyles={'mt-8'}
-      />
+      />}
+      
     </View>
   )
 }

@@ -4,17 +4,21 @@ import * as Notifications from 'expo-notifications'
 import { scheduleDailyNotifications } from "../lib/notifications";
 import { weatherApiKey } from "../constants/other";
 import * as Location from 'expo-location';
+import { getStoredLogs, getStoredUser, getStoredUserInfo, getStoredUserSttings, storeUser, storeUserInfo, storeUserSettings } from "../lib/asyncStorage";
 
 const GlobalContext = createContext()
 export const useGlobalContext = () => useContext(GlobalContext)
 
 export const GlobalProvider = ({children}) => {
 
+    const [isOffline, setIsOffline] = useState(true) // set this to false after testing offline mode
+
+    const [user, setUser] = useState('')
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    
     const [waterDrank, setWaterDrank] = useState(0)
 
     const todayDate = new Date().toISOString().split('T')[0];
-
-    const [lastResetDate, setLastResetDate] = useState(todayDate)
 
     /*
     const [waterUnit, setWaterUnit] = useState('ml')
@@ -33,11 +37,114 @@ export const GlobalProvider = ({children}) => {
     const [alcoholFromDrinks, setAlcoholFromDrinks] = useState(0)
     const [alcoholLevel, setAlcoholLevel] = useState(0)
     const [timeTillAlcZero, setTimeTillAlcZero] = useState(0)
-
+    
     const [userInfo, setUserInfo] = useState({weight: 60, dateOfBirth: Date.now(), gender: 'female'})
+    
+    //function to be calles when app starts that gets the logged in user if one exists
+    useEffect(() => {
+
+        if(!isOffline){
+            console.log("Getting user from db")
+            getCurrentUser()
+                .then((res) => {
+                    if(res){
+                        console.log("User is logged in")
+                        console.log('User has been set')
+                        setIsLoggedIn(true)
+                        setUser(res)
+                        storeUser(res)
+                    }else{
+                        setIsLoggedIn(false)
+                        setUser(null)
+                    }
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+                .finally(() => {
+                })
+        }else{
+            console.log("Getting user from local storage")
+            getStoredUser()
+                .then((res) => {
+                    if(res){
+                        setUser(res)
+                        setIsLoggedIn(true)
+                        console.log('User has been set')
+                        console.log(user)
+                    }else{
+                        setUser(null)
+                        setIsLoggedIn(false)
+                    }
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        }
+        
+    }, [])
+
+    //function that gets called at start of app that gets the user settings and user info
+    useEffect(() => {
+
+        console.log("useEffect runnig")
+        const aplyUserSettings = async () => {
+            console.log("Logged in user")
+            console.log(user)
+            if(user && user.$id){
+                try {
+                    if(isOffline){
+                        console.log("Aplying user settings from local storage")
+                        const settings = await getStoredUserSttings()
+                        setUserSettings(settings)
+                        if(settings.customWaterGoal){
+                            setWaterGoal(settings.customWaterGoal)
+                        }
+                    }else{
+                        console.log("Aplying user settings")
+                        const settings = await getUserSettings(user.$id)
+                        setUserSettings(settings)
+                        storeUserSettings(settings)
+                        if(settings.customWaterGoal){
+                            setWaterGoal(settings.customWaterGoal)
+                        }
+                    }
+    
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+        }
+
+        const aplyUserInfo = async () => {
+            if(user && user.$id){
+                try {
+                    if(isOffline){
+                        console.log("Aplying user info from storage")
+                        const info = await getStoredUserInfo()
+                        setUserInfo(info)
+                    }else{
+                        console.log("Aplying user info")
+                        const info = await getUserInfo(user.$id)
+                        setUserInfo(info)    
+                        storeUserInfo(info)
+                    }
+                    
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+        }
+
+        aplyUserInfo()
+        aplyUserSettings()
+        getInfoFromDrinks()
+        calculateWater()
+    
+    }, [user])
 
     const getCurrentLocation = async () => {
-            
+        
         try {
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {
@@ -123,7 +230,15 @@ export const GlobalProvider = ({children}) => {
     const calculateWater = async () => {
 
         try{
-            const info = await getUserInfo(user.$id)
+            let info 
+            if(isOffline){
+                info = await getStoredUserInfo()
+                //console.log("User info from storage")
+                //console.log(info)
+            }else{
+               info = await getUserInfo(user.$id)
+            }
+
             let goal = info.weight * 35
 
             let age = calculateAge(new Date(info.dateOfBirth))
@@ -153,34 +268,20 @@ export const GlobalProvider = ({children}) => {
         
       }
     
-    const [user, setUser] = useState({})
-    const [isLoggedIn, setIsLoggedIn] = useState(false)
-    
-    useEffect(() => {
-        getCurrentUser()
-            .then((res) => {
-                if(res){
-                    setIsLoggedIn(true)
-                    setUser(res)
-                }else{
-                    
-                    setIsLoggedIn(false)
-                    setUser(null)
-                }
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-            .finally(() => {
-            })
-        
-    }, [])
-
     const getInfoFromDrinks = async () => {
         if(user && user.$id){
             try {
-                const todaysLogs = await getTodaysUserLogs(user.$id)
+                let todaysLogs = []
 
+                if(!isOffline){
+                    todaysLogs = await getTodaysUserLogs(user.$id)
+                }else{
+                    console.log("Getting logs from local storage")
+                    todaysLogs = await getStoredLogs()
+                }
+
+                console.log(todaysLogs)
+                
                 let waterDrankToday = 0
                 let sugarFromDrinksToday = 0
                 let caloriesFromDrinksToday = 0
@@ -227,41 +328,6 @@ export const GlobalProvider = ({children}) => {
         }
     }
 
-    useEffect(() => {
-        const aplyUserSettings = async () => {
-            if(user && user.$id){
-                try {
-                    const settings = await getUserSettings(user.$id)
-                    setUserSettings(settings)
-                    if(settings.customWaterGoal){
-                        setWaterGoal(settings.customWaterGoal)
-                    }
-                    
-    
-                } catch (error) {
-                    console.log(error)
-                }
-            }
-        }
-
-        const aplyUserInfo = async () => {
-            if(user && user.$id){
-                try {
-                    const info = await getUserInfo(user.$id)
-                    setUserInfo(info)    
-                    
-                } catch (error) {
-                    console.log(error)
-                }
-            }
-        }
-
-        aplyUserInfo()
-        aplyUserSettings()
-        getInfoFromDrinks()
-        calculateWater()
-    }, [user])
-
     return (
         <GlobalContext.Provider
             value={{
@@ -272,10 +338,6 @@ export const GlobalProvider = ({children}) => {
                 /*
                 waterUnit, 
                 setWaterUnit,
-                */
-                lastResetDate,
-                setLastResetDate,
-                /*
                 cupVolume, 
                 setCupVolume,
                 */
@@ -301,7 +363,9 @@ export const GlobalProvider = ({children}) => {
                 getInfoFromDrinks,
                 alcoholLevel,
                 setAlcoholLevel,
-                timeTillAlcZero
+                timeTillAlcZero,
+                isOffline,
+                setIsOffline
             }}
         >
             {children}

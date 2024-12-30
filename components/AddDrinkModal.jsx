@@ -6,6 +6,7 @@ import CustomDropdown from './CustomDropdown.jsx'
 import { volumeUnits } from '../constants/units.js'
 import { useGlobalContext } from '../context/globalProvider.js'
 import { createLog } from '../lib/appwrite.js'
+import { getStoredLogs, storeLog } from '../lib/asyncStorage.js'
 
 
 const AddDrinkModal = ({drinkOptions, setModal}) => {
@@ -17,7 +18,7 @@ const AddDrinkModal = ({drinkOptions, setModal}) => {
         {label: 'oz', value: 2}
     ]
 
-    const {user, userSettings, setWaterDrank, waterDrank, getInfoFromDrinks} = useGlobalContext()
+    const {user, userSettings, setWaterDrank, waterDrank, getInfoFromDrinks, isOffline} = useGlobalContext()
   
     const [unit, setUnit] = useState(options[0].label)
     const [amount, setAmount] = useState(0)
@@ -25,7 +26,14 @@ const AddDrinkModal = ({drinkOptions, setModal}) => {
 
     const submit = async () => {
       try {
-        await createLog(user.$id, drinkType.$id, (parseFloat(amount) * volumeUnits[unit]), new Date())
+        if(isOffline){
+          console.log("Creating log locally")
+          console.log(await getStoredLogs())
+          await storeLog(drinkType.$id, (parseFloat(amount) * volumeUnits[unit]), new Date())
+        }else{
+          await createLog(user.$id, drinkType.$id, (parseFloat(amount) * volumeUnits[unit]), new Date())
+        }
+
         getInfoFromDrinks()
         setModal(false)
       } catch (error) {

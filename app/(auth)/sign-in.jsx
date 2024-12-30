@@ -8,6 +8,7 @@ import { Link, router } from 'expo-router'
 import { signIn, getCurrentUser, getUserSettings } from '../../lib/appwrite'
 import { useGlobalContext } from '../../context/globalProvider'
 import CustomModal from '../../components/CustomModal'
+import { storeUser } from '../../lib/asyncStorage'
 
 const SignIn = () => {
 
@@ -28,6 +29,7 @@ const SignIn = () => {
         await signIn(email, password)
         const result = await getCurrentUser();
         setUser(result)
+        storeUser(result)
         setIsLoggedIn(true)
         const userSettings = await getUserSettings(result.$id)
         router.replace('/home')

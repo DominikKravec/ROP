@@ -9,10 +9,11 @@ import CircularProgress from 'react-native-circular-progress-indicator'
 import { createLog, getUserDrinks, getUserLogs } from '../lib/appwrite'
 import { waterId } from '../constants/other'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { storeLog } from '../lib/asyncStorage'
 
 const WaterInfoPage = () => {
 
-    const {userSettings, waterDrank, waterGoal, user, setWaterDrank, getCurrentTemperature, getInfoFromDrinks} = useGlobalContext()
+    const {userSettings, waterDrank, waterGoal, user, setWaterDrank, getCurrentTemperature, getInfoFromDrinks, isOffline} = useGlobalContext()
 
     const [unit, setUnit] = useState('ml')
 
@@ -39,14 +40,31 @@ const WaterInfoPage = () => {
         if(userSettings.volumeUnit){
             setUnit(userSettings.volumeUnit)
         }
-    }, userSettings)
+    }, [userSettings])
 
     const quickCup = async () => {
         try {
-            await createLog(user.$id, waterId, userSettings.cupSize, new Date())
+            if(isOffline){
+                await storeLog(waterId, userSettings.cupSize, new Date())
+            }else{
+                await createLog(user.$id, waterId, userSettings.cupSize, new Date())
+            }
             getInfoFromDrinks()
         } catch (error) {
             console.log("Failed to add cup due too: " + error)
+        }
+    }
+    
+    const halfCup = async () => {
+        try {
+            if(isOffline){
+                await storeLog(waterId, userSettings.cupSize / 2, new Date())                
+            }else{
+                await createLog(user.$id, waterId, userSettings.cupSize / 2, new Date())
+            }
+            getInfoFromDrinks()
+        } catch (error) {
+            console.log("Failed to add half cup due too: " + error)
         }
     }
 
@@ -69,9 +87,7 @@ const WaterInfoPage = () => {
 
     return (
         <SafeAreaView className="w-[100vw] h-full justify-center items-center"> 
-            <View className="justify-center items-center">
-                
-            
+            <View className="justify-center items-center h-[50%]">
                 <View pointerEvents='none'>
                     <CircularProgress
                         value={progress > 100 ? 100 : progress}
@@ -90,31 +106,42 @@ const WaterInfoPage = () => {
                 </Text>
             </View>
 
-            <View className="mt-5">
+            <View className="mt-5 justify-center items-center">
                 <View className="flex flex-row justify-between">
                     <View className="w-[48%]">
-                    <IconButton
-                        icon={icons.cupIcon}
-                        title="quick cup"
-                        handle={() => {quickCup()}}
-                    />
+                        <IconButton
+                            icon={icons.cupIcon}
+                            title="quick cup"
+                            handle={() => {quickCup()}}
+                        />
                     </View>
 
                     <View className="w-[48%]">
-                    <IconButton
-                        icon={icons.plus}
-                        title="Add drink"
-                        handle={() => {setModal(true); setModalContent(<AddDrinkModal drinkOptions={drinkOptions} setModal={setModal}/>)}}
-                    />
+                        <IconButton
+                            icon={icons.halfCupIcon}
+                            title="Half cup"
+                            handle={() => {halfCup()}}
+                        />
                     </View>
                 </View>
-                <View>
-                    <IconButton
-                    icon={icons.previous}
-                    title="Previous drink"
-                    handle={() => {previousDrink()}}
-                    />
 
+                <View className="flex flex-row justify-between mt-20">
+                    <View className="w-[48%]">
+                        <IconButton
+                        icon={icons.previous}
+                        title="Previous drink"
+                        handle={() => {previousDrink()}}
+                        />
+                    </View>
+                    
+
+                    <View className="w-[48%]">
+                        <IconButton
+                            icon={icons.plus}
+                            title="Add drink"
+                            handle={() => {setModal(true); setModalContent(<AddDrinkModal drinkOptions={drinkOptions} setModal={setModal}/>)}}
+                        />
+                    </View>
                 </View>
             </View>
 

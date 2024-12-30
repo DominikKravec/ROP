@@ -19,6 +19,7 @@ import close from "../assets/icons/close.png"
 import previous from "../assets/icons/previous.png"
 import edit from "../assets/icons/edit.png"
 import trash from "../assets/icons/trash.png"
+import halfCupIcon from "../assets/icons/half_cup_icon.png"
 
 export default {
   play,
@@ -41,5 +42,6 @@ export default {
   close,
   previous,
   edit,
-  trash
+  trash,
+  halfCupIcon,
 };

@@ -2,6 +2,7 @@ import { View, Text, Image } from 'react-native'
 import React from 'react'
 import { Tabs, useLocalSearchParams } from 'expo-router'
 import {icons} from '../../constants'
+import { useGlobalContext } from '../../context/globalProvider'
 
 const TabIcon = ({icon, iconInactive, color, title, focused}) => {
   return(
@@ -21,8 +22,15 @@ const TabIcon = ({icon, iconInactive, color, title, focused}) => {
 
 const TabsLayout = () => {
 
+  const {isOffline} = useGlobalContext()
+
   return (
     <>
+      {isOffline && (
+        <View className="w-full justify-center items-center mt-10 px-5">
+          <Text className="text-blue-200 text-xl text-center">You are offline the app will only do basic operations</Text>
+        </View>
+      )}
       <Tabs
         screenOptions={{
           tabBarShowLabel: false,

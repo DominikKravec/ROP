@@ -7,7 +7,7 @@ import { getMonthLogs, getWeekLogs } from '../lib/appwrite'
 
 const GraphPage = () => {
 
-  const {sugarFromDrinks, user, caloriesFromDrinks, getInfoFromDrinks, alcoholLevel, timeTillAlcZero, waterGoal} = useGlobalContext()
+  const {sugarFromDrinks, user, caloriesFromDrinks, getInfoFromDrinks, alcoholLevel, timeTillAlcZero, waterGoal, isOffline} = useGlobalContext()
 
   const [weeklyWater, setWeeklyWater] = useState([])
   const [weeklySugar, setWeeklySugar] = useState([])
@@ -25,6 +25,7 @@ const GraphPage = () => {
 
   useEffect(() => {
     const getLogs = async () => {
+      if (isOffline) return
       try {
 
         const monthLogs = await getMonthLogs(user.$id)
@@ -62,7 +63,6 @@ const GraphPage = () => {
           let label = "" + date.getDate() + "." + (date.getMonth() + 1)
 
           let sugar = (parseFloat(log.drink.sugar) / 100) * parseFloat(log.volume)
-          console.log("Sugar in drink is: " + sugar)
 
           for(idx in dailyInfoSugar){
             if(dailyInfoSugar[idx].label == label){
@@ -71,7 +71,6 @@ const GraphPage = () => {
           }
         })
 
-        console.log(dailyInfoSugar)
         setWeeklySugar(dailyInfoSugar.reverse())
         
         dailyInfoWater = []
@@ -95,7 +94,6 @@ const GraphPage = () => {
           }
         })
 
-        console.log(dailyInfoWater)
         setMonthlyWater(dailyInfoWater.reverse())
         
       } catch (error) {
@@ -143,79 +141,87 @@ const GraphPage = () => {
      
       
       <View className=" border-2 border-blue h-[50%] w-full rounded-3xl justify-center items-center" onLayout={handleLayout} >
-        <ScrollView
-          horizontal={false}
-          pagingEnabled={true} 
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          onScroll={handleScroll}
-          scrollEventThrottle={16}
-          className="flex-1"
-        > 
-          <View 
-            className="justify-center items-center"
-            style={{height: graphWindowHeight, width: '100%'}} 
-          >
-            <Text className="text-blue-200 text-lg">Weekly water intake </Text>
-            <BarChart
-              frontColor={'#3CACFD'}
-              barWidth={18}
-              data={weeklyWater}
-              barBorderRadius={5}
-              noOfSections={3}
-              xAxisColor={'#7DC9FF'}
-              yAxisColor={'#7DC9FF'}
-              yAxisTextStyle={{color: "#7DC9FF"}}
-              xAxisLabelTextStyle={{color: "#7DC9FF", fontSize: 11}}
-              rulesColor={'#A5D9FF'}
-              width={300}
-            />
-          </View>
+        {isOffline ? 
+          <View className='h-full justify-center items-center'>
+            <Text className="text-2xl text-blue-200 text-center">Graphs can only be viewed while online</Text>
+          </View> :
+          <>
 
-          <View 
-            className="justify-center items-center"
-            style={{height: graphWindowHeight, width: '100%'}}
-          >
-            <Text className="text-blue-200 text-lg"> Monthly water intake </Text>
-            <BarChart
-              frontColor={'#3CACFD'}
-              barWidth={5}
-              spacing={4}
-              data={monthlyWater}
-              barBorderRadius={5}
-              noOfSections={3}
-              xAxisColor={'#7DC9FF'}
-              yAxisColor={'#7DC9FF'}
-              yAxisTextStyle={{color: "#7DC9FF"}}
-              xAxisLabelTextStyle={{display: 'none'}}
-              rulesColor={'#A5D9FF'}
-              width={300}
-            />
-          </View>
+            <ScrollView
+              horizontal={false}
+              pagingEnabled={true} 
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
+              onScroll={handleScroll}
+              scrollEventThrottle={16}
+              className="flex-1"
+            > 
+              <View 
+                className="justify-center items-center"
+                style={{height: graphWindowHeight, width: '100%'}} 
+              >
+                <Text className="text-blue-200 text-lg">Weekly water intake </Text>
+                <BarChart
+                  frontColor={'#3CACFD'}
+                  barWidth={18}
+                  data={weeklyWater}
+                  barBorderRadius={5}
+                  noOfSections={3}
+                  xAxisColor={'#7DC9FF'}
+                  yAxisColor={'#7DC9FF'}
+                  yAxisTextStyle={{color: "#7DC9FF"}}
+                  xAxisLabelTextStyle={{color: "#7DC9FF", fontSize: 11}}
+                  rulesColor={'#A5D9FF'}
+                  width={300}
+                />
+              </View>
 
-          <View 
-            className="justify-center items-center"
-            style={{height: graphWindowHeight, width: '100%'}}
-          >
-            <Text className="text-blue-200 text-lg"> Weekly sugar intake from drinks </Text>
-            <BarChart
-              frontColor={'#3CACFD'}
-              barWidth={18}
-              data={weeklySugar}
-              barBorderRadius={5}
-              noOfSections={3}
-              xAxisColor={'#7DC9FF'}
-              yAxisColor={'#7DC9FF'}
-              yAxisTextStyle={{color: "#7DC9FF"}}
-              xAxisLabelTextStyle={{color: "#7DC9FF", fontSize: 11}}
-              rulesColor={'#A5D9FF'}
-              width={300}
-            />
-          </View>
+              <View 
+                className="justify-center items-center"
+                style={{height: graphWindowHeight, width: '100%'}}
+              >
+                <Text className="text-blue-200 text-lg"> Monthly water intake </Text>
+                <BarChart
+                  frontColor={'#3CACFD'}
+                  barWidth={5}
+                  spacing={4}
+                  data={monthlyWater}
+                  barBorderRadius={5}
+                  noOfSections={3}
+                  xAxisColor={'#7DC9FF'}
+                  yAxisColor={'#7DC9FF'}
+                  yAxisTextStyle={{color: "#7DC9FF"}}
+                  xAxisLabelTextStyle={{display: 'none'}}
+                  rulesColor={'#A5D9FF'}
+                  width={300}
+                />
+              </View>
+
+              <View 
+                className="justify-center items-center"
+                style={{height: graphWindowHeight, width: '100%'}}
+              >
+                <Text className="text-blue-200 text-lg"> Weekly sugar intake from drinks </Text>
+                <BarChart
+                  frontColor={'#3CACFD'}
+                  barWidth={18}
+                  data={weeklySugar}
+                  barBorderRadius={5}
+                  noOfSections={3}
+                  xAxisColor={'#7DC9FF'}
+                  yAxisColor={'#7DC9FF'}
+                  yAxisTextStyle={{color: "#7DC9FF"}}
+                  xAxisLabelTextStyle={{color: "#7DC9FF", fontSize: 11}}
+                  rulesColor={'#A5D9FF'}
+                  width={300}
+                />
+              </View>
 
 
 
-        </ScrollView>
+            </ScrollView>
+          </>
+        }
       </View>
     </SafeAreaView>
   )
