@@ -27,7 +27,7 @@ const TabsLayout = () => {
   return (
     <>
       {isOffline && (
-        <View className="w-full justify-center items-center mt-10 px-5">
+        <View className="w-full justify-center items-center mt-10 px-5 bg-primary">
           <Text className="text-blue-200 text-xl text-center">You are offline the app will only do basic operations</Text>
         </View>
       )}

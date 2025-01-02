@@ -18,7 +18,7 @@ const profile = () => {
 
   const [modal, setModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
-  const {user, setUser, setIsLoggedIn, isOffline} = useGlobalContext()
+  const {user, setUser, setIsLoggedIn, isOffline, setIsOffline} = useGlobalContext()
 
   return (
     <SafeAreaView className="h-full px-5 bg-primary">
@@ -81,6 +81,12 @@ const profile = () => {
                       <Button
                         title="Send notification"
                         handle={() => {sendNotification()}}
+                      />
+
+                      <Button
+                        title="Go to offline mode"
+                        containerStyles={'mt-5'}
+                        handle={() => {setIsOffline(true)}}
                       />
                     </View>
                   )

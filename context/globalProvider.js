@@ -5,7 +5,7 @@ import { scheduleDailyNotifications } from "../lib/notifications";
 import { weatherApiKey } from "../constants/other";
 import * as Location from 'expo-location';
 import { emptyLogStorage, getStoredLogs, getStoredUser, getStoredUserInfo, getStoredUserSttings, storeUser, storeUserInfo, storeUserSettings } from "../lib/asyncStorage";
-import { useNetInfo } from "@react-native-community/netinfo";
+import * as Network from 'expo-network';
 import { Alert } from "react-native";
 
 
@@ -14,10 +14,7 @@ export const useGlobalContext = () => useContext(GlobalContext)
 
 export const GlobalProvider = ({children}) => {
 
-    const netInfo = useNetInfo()
-    Alert.alert(JSON.stringify(netInfo.isConnected))
-
-    const [isOffline, setIsOffline] = useState(netInfo.isConnected && netInfo.isInternetReachable) 
+    const [isOffline, setIsOffline] = useState(true) 
 
     const [user, setUser] = useState('')
     const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -45,6 +42,22 @@ export const GlobalProvider = ({children}) => {
     const [timeTillAlcZero, setTimeTillAlcZero] = useState(0)
     
     const [userInfo, setUserInfo] = useState({weight: 60, dateOfBirth: Date.now(), gender: 'female'})
+
+    useEffect(() => {
+
+        const checkConnection = async () => {
+            try {
+                const networkInfo = await Network.getNetworkStateAsync()
+                
+                await setIsOffline(!(networkInfo.isConnected && networkInfo.isInternetReachable))    
+                console.log(isOffline)
+            } catch (error) {
+                console.log("Error checking connection: " + error)
+            }
+        }
+
+        checkConnection()
+    }, [])
     
     //function to be calles when app starts that gets the logged in user if one exists
     useEffect(() => {      
@@ -161,6 +174,7 @@ export const GlobalProvider = ({children}) => {
         }
 
         emptyLogStorage()
+        getInfoFromDrinks()
     }
 
     const getCurrentLocation = async () => {
