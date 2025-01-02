@@ -5,10 +5,10 @@ import Button from '../../components/Button'
 import Input from '../../components/Input'
 import { TouchableOpacity } from 'react-native'
 import { Link, router } from 'expo-router'
-import { signIn, getCurrentUser, getUserSettings } from '../../lib/appwrite'
+import { signIn, getCurrentUser, getUserDrinks } from '../../lib/appwrite'
 import { useGlobalContext } from '../../context/globalProvider'
 import CustomModal from '../../components/CustomModal'
-import { storeUser } from '../../lib/asyncStorage'
+import { storeUser, storeUserDrinks } from '../../lib/asyncStorage'
 
 const SignIn = () => {
 
@@ -31,8 +31,10 @@ const SignIn = () => {
         setUser(result)
         storeUser(result)
         setIsLoggedIn(true)
-        const userSettings = await getUserSettings(result.$id)
         router.replace('/home')
+
+        const userDrinks = await getUserDrinks(user.$id)
+        await storeUserDrinks(userDrinks)
       } catch (error) {
         if(error + "" == 'Error: AppwriteException: Invalid credentials. Please check the email and password.'){
           setModalText("User with theese credentials does not exist")

@@ -6,6 +6,7 @@ import { weatherApiKey } from "../constants/other";
 import * as Location from 'expo-location';
 import { emptyLogStorage, getStoredLogs, getStoredUser, getStoredUserInfo, getStoredUserSttings, storeUser, storeUserInfo, storeUserSettings } from "../lib/asyncStorage";
 import { useNetInfo } from "@react-native-community/netinfo";
+import { Alert } from "react-native";
 
 
 const GlobalContext = createContext()
@@ -14,6 +15,7 @@ export const useGlobalContext = () => useContext(GlobalContext)
 export const GlobalProvider = ({children}) => {
 
     const netInfo = useNetInfo()
+    Alert.alert(JSON.stringify(netInfo.isConnected))
 
     const [isOffline, setIsOffline] = useState(netInfo.isConnected && netInfo.isInternetReachable) 
 
@@ -64,6 +66,7 @@ export const GlobalProvider = ({children}) => {
                 })
                 .catch((error) => {
                     console.log(error)
+                    setIsOffline(true)
                 })
                 .finally(() => {
                 })
@@ -84,7 +87,7 @@ export const GlobalProvider = ({children}) => {
                 })
         }
         
-    }, [])
+    }, [isOffline])
 
     //function that gets called at start of app that gets the user settings and user info
     useEffect(() => {
@@ -143,7 +146,7 @@ export const GlobalProvider = ({children}) => {
         getInfoFromDrinks()
         calculateWater()
     
-    }, [user])
+    }, [user, isOffline])
 
     const handleRegainedConnection = async (userId) => {
 
@@ -314,11 +317,11 @@ export const GlobalProvider = ({children}) => {
                         alcoholDrank = true
                         const timeOfDrink = new Date(log.timeOfDrink)
                         const dateNow = new Date()
+                        console.log("Time of drink: ", timeOfDrink.toISOString(), "Time now: ", dateNow.toISOString())
 
-                        let diff = dateNow - timeOfDrink
+                        let diff = dateNow.getTime() - timeOfDrink.getTime()
                         hours = diff / (1000 * 60 * 60)
                         console.log("Hours since fisrt drink: " + hours)
-
                     }
 
                     alcoholFromDrinksToday += parseFloat(log.volume) * parseFloat(log.drink.apv) / 100 * 0.789
@@ -333,7 +336,7 @@ export const GlobalProvider = ({children}) => {
 
                 let alcoholLevelBeforeTime = (alcoholFromDrinksToday / (weight * (gender == 'male' ? 0.68 : 0.55))) / 10
                 let alcoholLevelNow = (alcoholLevelBeforeTime - 0.015 * hours) 
-                let timeTillZero = (alcoholLevelBeforeTime - alcoholLevelNow) / 0.015 * 10
+                let timeTillZero = alcoholLevelNow / 0.15
                 console.log("time until zero: " + timeTillZero)
                 setAlcoholLevel(alcoholLevelNow)
                 setTimeTillAlcZero(timeTillZero)

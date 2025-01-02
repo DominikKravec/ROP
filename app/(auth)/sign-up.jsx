@@ -5,10 +5,10 @@ import Button from '../../components/Button'
 import Input from '../../components/Input'
 import { TouchableOpacity } from 'react-native'
 import { Link, router } from 'expo-router'
-import { createUser, getUserSettings } from '../../lib/appwrite'
+import { createUser, getUserSettings, getUserDrinks } from '../../lib/appwrite'
 import { useGlobalContext } from '../../context/globalProvider'
 import CustomModal from '../../components/CustomModal'
-import { storeUser } from '../../lib/asyncStorage'
+import { storeUser, storeUserDrinks } from '../../lib/asyncStorage'
 
 const SignUp = () => {
 
@@ -33,6 +33,9 @@ const SignUp = () => {
         storeUser(result)
         setIsLoggedIn(true)
         router.replace('/personalInfo')
+
+        const userDrinks = await getUserDrinks(user.$id)
+        await storeUserDrinks(userDrinks)
       } catch (error) {
         if(error + '' == 'Error: AppwriteException: A user with the same id, email, or phone already exists in this project.'){
           setModal(true)

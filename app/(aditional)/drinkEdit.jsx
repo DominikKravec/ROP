@@ -6,7 +6,8 @@ import Input from '../../components/Input.jsx'
 import Button from '../../components/Button.jsx'
 import { router } from 'expo-router'
 import InputUnit from '../../components/InputUnit.jsx'
-import { addCustomDrink, getCustomDrinks, updateDrink } from '../../lib/appwrite.js'
+import { addCustomDrink, getCustomDrinks, getUserDrinks, updateDrink } from '../../lib/appwrite.js'
+import { storeUserDrinks } from '../../lib/asyncStorage.js'
 
 const DrinkEdit = () => {
   const sugarUnitOptions = [{label: "g", value: 0}, {label: "oz", value: 1},]
@@ -25,9 +26,14 @@ const DrinkEdit = () => {
 
     if(!editedDrink){
       try {
-        const newDrink = addCustomDrink(user.$id, name, parseFloat(calories), parseInt(apv), parseFloat(sugar))
-        setCustomDrinks([...customDrinks, newDrink])
+        const newDrink = await addCustomDrink(user.$id, name, parseFloat(calories), parseInt(apv), parseFloat(sugar))
+        await setCustomDrinks([...customDrinks, newDrink])
+
         router.replace('/customDrinks')    
+
+        const userDrinks = await getUserDrinks(user.$id)
+        await storeUserDrinks(userDrinks)
+
       } catch (error) {
         console.log("Couldn't add drink due to: " + error)
       }
