@@ -31,10 +31,9 @@ const SignIn = () => {
         setUser(result)
         storeUser(result)
         setIsLoggedIn(true)
-        router.replace('/home')
-
-        const userDrinks = await getUserDrinks(user.$id)
+        const userDrinks = await getUserDrinks(result.$id)
         await storeUserDrinks(userDrinks)
+        router.replace('/home')
       } catch (error) {
         if(error + "" == 'Error: AppwriteException: Invalid credentials. Please check the email and password.'){
           setModalText("User with theese credentials does not exist")

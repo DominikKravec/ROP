@@ -81,7 +81,7 @@ export const GlobalProvider = ({children}) => {
     }, [])
     
     //function to be calles when app starts that gets the logged in user if one exists
-    useEffect(() => {      
+    useEffect(() => {  
         if(!isOffline){
             console.log("Getting user from db")
             getCurrentUser()
@@ -257,11 +257,9 @@ export const GlobalProvider = ({children}) => {
             });
         }
 
-        console.log(notificationTimes)
-
         const amountPerNotification = Math.ceil(((waterGoal / reminderAmount) / cupSize) * 2) / 2;
 
-        console.log(`At cup size ${cupSize} and reminder amount ${reminderAmount} with a water goal ${waterGoal} you should drink ${amountPerNotification} cups of water per notification`)
+        //console.log(`At cup size ${cupSize} and reminder amount ${reminderAmount} with a water goal ${waterGoal} you should drink ${amountPerNotification} cups of water per notification`)
 
         scheduleDailyNotifications(notificationTimes, amountPerNotification)
 
@@ -313,7 +311,6 @@ export const GlobalProvider = ({children}) => {
 
             //increasing water intake based on physical activity tracked through health connect
             const physicalActivityData = await readData()
-            console.log(physicalActivityData)
 
             const burnedCalories = physicalActivityData[0].energy.inKilocalories
             console.log("Burned calories: " + burnedCalories)

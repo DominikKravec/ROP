@@ -25,9 +25,11 @@ const WaterInfoPage = () => {
     useEffect(() => {
         const getDrinks = async () => {
           try{
-
+            console.log()
             if(isOffline){
+                console.log("Getting drinks from storage")
                 const drinks = await getStoredUserDrinks()
+                console.log(drinks)
                 setDrinkOptions(drinks)
             }else{
                 const drinks = await getUserDrinks(user.$id)
@@ -40,7 +42,7 @@ const WaterInfoPage = () => {
         
         getDrinks()
         getCurrentTemperature()
-      }, [])
+      }, [isOffline])
 
     useEffect(() => {
         if(userSettings.volumeUnit){
@@ -145,7 +147,16 @@ const WaterInfoPage = () => {
                         <IconButton
                             icon={icons.plus}
                             title="Add drink"
-                            handle={() => {setModal(true); setModalContent(<AddDrinkModal drinkOptions={drinkOptions} setModal={setModal}/>)}}
+                            handle={() => {
+                                if(drinkOptions){
+                                    setModal(true);
+                                    setModalContent(
+                                        <AddDrinkModal drinkOptions={drinkOptions} setModal={setModal}/>
+                                    )
+                                }else{
+                                    alert("No drink options available");
+                                }
+                            }}
                         />
                     </View>
                 </View>

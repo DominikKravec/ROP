@@ -32,10 +32,9 @@ const SignUp = () => {
         setUser(result)
         storeUser(result)
         setIsLoggedIn(true)
-        router.replace('/personalInfo')
-
         const userDrinks = await getUserDrinks(user.$id)
         await storeUserDrinks(userDrinks)
+        router.replace('/personalInfo')
       } catch (error) {
         if(error + '' == 'Error: AppwriteException: A user with the same id, email, or phone already exists in this project.'){
           setModal(true)
