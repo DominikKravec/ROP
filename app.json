@@ -17,7 +17,13 @@
       "bundleIdentifier": "health-reminder"
     },
     "android": {
-      "package": "com.kravec.healthReminder"
+      "package": "com.kravec.healthReminder",
+      "permissions": [
+        "android.permission.health.READ_STEPS",
+        "android.permission.health.WRITE_STEPS",
+        "android.permission.health.READ_ACTIVE_CALORIES_BURNED",
+        "android.permission.health.READ_TOTAL_CALORIES_BURNED"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -31,7 +37,19 @@
         {
           "icon": "./assets/images/icon_white.png"
         }
-      ]
+      ],
+      "expo-health-connect",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 34,
+            "targetSdkVersion": 34,
+            "minSdkVersion": 26
+          }
+        }
+      ],
+      "react-native-health-connect"
     ],
     "experiments": {
       "typedRoutes": true

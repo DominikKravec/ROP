@@ -15,7 +15,8 @@ const AddDrinkModal = ({drinkOptions, setModal}) => {
     const options = [
         {label: 'ml', value: 0},
         {label: 'l', value: 1},
-        {label: 'oz', value: 2}
+        {label: 'oz', value: 2},
+        {label: 'cp', value: 3},
     ]
 
     const {user, userSettings, setWaterDrank, waterDrank, getInfoFromDrinks, isOffline} = useGlobalContext()
@@ -29,9 +30,9 @@ const AddDrinkModal = ({drinkOptions, setModal}) => {
         if(isOffline){
           console.log("Creating log locally")
           console.log(await getStoredLogs())
-          await storeLog(drinkType.$id, (parseFloat(amount) * volumeUnits[unit]), new Date())
+          await storeLog(drinkType.$id, unit.label == 'cp' ? (parseFloat(amount) * userSettings.cupSize) : (parseFloat(amount) * volumeUnits[unit]), new Date())
         }else{
-          await createLog(user.$id, drinkType.$id, (parseFloat(amount) * volumeUnits[unit]), new Date())
+          await createLog(user.$id, drinkType.$id, unit == 'cp' ? (parseFloat(amount) * userSettings.cupSize) : (parseFloat(amount) * volumeUnits[unit]), new Date())
         }
 
         getInfoFromDrinks()

@@ -4,9 +4,10 @@ import * as Notifications from 'expo-notifications'
 import { scheduleDailyNotifications } from "../lib/notifications";
 import { weatherApiKey } from "../constants/other";
 import * as Location from 'expo-location';
-import { emptyLogStorage, getStoredLogs, getStoredUser, getStoredUserInfo, getStoredUserSttings, storeUser, storeUserInfo, storeUserSettings } from "../lib/asyncStorage";
+import { emptyLogStorage, getAlternateButtonsState, getStoredLogs, getStoredUser, getStoredUserInfo, getStoredUserSttings, storeUser, storeUserInfo, storeUserSettings } from "../lib/asyncStorage";
 import * as Network from 'expo-network';
 import { Alert } from "react-native";
+import { readData } from "../lib/healthConnect";
 
 
 const GlobalContext = createContext()
@@ -14,7 +15,7 @@ export const useGlobalContext = () => useContext(GlobalContext)
 
 export const GlobalProvider = ({children}) => {
 
-    const [isOffline, setIsOffline] = useState(true) 
+    const [isOffline, setIsOffline] = useState(false) 
 
     const [user, setUser] = useState('')
     const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -40,23 +41,43 @@ export const GlobalProvider = ({children}) => {
     const [alcoholFromDrinks, setAlcoholFromDrinks] = useState(0)
     const [alcoholLevel, setAlcoholLevel] = useState(0)
     const [timeTillAlcZero, setTimeTillAlcZero] = useState(0)
+    const [alternateButtons, setAlternateButtons] = useState(false)
     
     const [userInfo, setUserInfo] = useState({weight: 60, dateOfBirth: Date.now(), gender: 'female'})
 
+    //check users connection when app loads
     useEffect(() => {
 
         const checkConnection = async () => {
             try {
                 const networkInfo = await Network.getNetworkStateAsync()
+
+                console.log("The user is connected: " + (networkInfo.isConnected && networkInfo.isInternetReachable))
                 
+                //Alert.alert(networkInfo.isConnected && networkInfo.isInternetReachable ? "You are connected" : "You are not connected")
+
                 await setIsOffline(!(networkInfo.isConnected && networkInfo.isInternetReachable))    
-                console.log(isOffline)
+                console.log("The user is offline: " + isOffline)
             } catch (error) {
                 console.log("Error checking connection: " + error)
             }
         }
 
         checkConnection()
+    }, [])
+
+    //function that loads display preffrences from storage
+    useEffect(() => {
+        const getDisplaySettings = async () => {
+            try {
+                const alternateButtonsState = await getAlternateButtonsState()
+                setAlternateButtons(alternateButtonsState)
+            } catch (error) {
+                console.log("Error aplying display settings: " + error)
+            }
+        }
+
+        getDisplaySettings()
     }, [])
     
     //function to be calles when app starts that gets the logged in user if one exists
@@ -104,8 +125,6 @@ export const GlobalProvider = ({children}) => {
 
     //function that gets called at start of app that gets the user settings and user info
     useEffect(() => {
-
-        console.log("useEffect runnig")
         const aplyUserSettings = async () => {
             console.log("Logged in user")
             console.log(user)
@@ -262,19 +281,17 @@ export const GlobalProvider = ({children}) => {
     }
 
     const calculateWater = async () => {
-
         try{
             let info 
             if(isOffline){
                 info = await getStoredUserInfo()
-                //console.log("User info from storage")
-                //console.log(info)
             }else{
                info = await getUserInfo(user.$id)
             }
 
             let goal = info.weight * 35
 
+            //increase water intake based on age
             let age = calculateAge(new Date(info.dateOfBirth))
             age -= 30
             while(age >= 0){
@@ -283,8 +300,8 @@ export const GlobalProvider = ({children}) => {
             }
 
             const weatherCalculation = true //remove this when you add it to settings
-
             
+            //increase water intake based on temperature
             if(weatherCalculation){
                 let temperature = await getCurrentTemperature()
                 if(temperature > 33){
@@ -293,6 +310,16 @@ export const GlobalProvider = ({children}) => {
                     goal += 500
                 }
             }
+
+            //increasing water intake based on physical activity tracked through health connect
+            const physicalActivityData = await readData()
+            console.log(physicalActivityData)
+
+            const burnedCalories = physicalActivityData[0].energy.inKilocalories
+            console.log("Burned calories: " + burnedCalories)
+
+            //a person should drink about 0.3 litres more for every 300-500 calories burned
+            goal += (burnedCalories / 400) * 300 
 
             setWaterGoal(Math.round(goal))
             scheduleNotifications(Math.round(goal))
@@ -306,12 +333,12 @@ export const GlobalProvider = ({children}) => {
         if(user && user.$id){
             try {
                 let todaysLogs = []
-
-                if(!isOffline){
-                    todaysLogs = await getTodaysUserLogs(user.$id)
-                }else{
+                
+                if(isOffline){
                     console.log("Getting logs from local storage")
                     todaysLogs = await getStoredLogs()
+                }else{
+                    todaysLogs = await getTodaysUserLogs(user.$id)
                 }
 
                 let waterDrankToday = 0
@@ -346,7 +373,7 @@ export const GlobalProvider = ({children}) => {
                 setCaloriesFromDrinks(caloriesFromDrinksToday)
                 setAlcoholFromDrinks(alcoholFromDrinksToday)
 
-                const {gender, weight} = await getUserInfo(user.$id);
+                const {gender, weight} = isOffline ? await getStoredUserInfo() : await getUserInfo(user.$id);
 
                 let alcoholLevelBeforeTime = (alcoholFromDrinksToday / (weight * (gender == 'male' ? 0.68 : 0.55))) / 10
                 let alcoholLevelNow = (alcoholLevelBeforeTime - 0.015 * hours) 
@@ -356,6 +383,7 @@ export const GlobalProvider = ({children}) => {
                 setTimeTillAlcZero(timeTillZero)
             } catch (error) {
                 console.log("Couldn't calculate water drank due too: " + error)
+                Alert.alert("Error getting info from drinks")
             }
         }
     }
@@ -397,7 +425,9 @@ export const GlobalProvider = ({children}) => {
                 setAlcoholLevel,
                 timeTillAlcZero,
                 isOffline,
-                setIsOffline
+                setIsOffline,
+                alternateButtons,
+                setAlternateButtons
             }}
         >
             {children}

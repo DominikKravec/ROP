@@ -12,13 +12,13 @@ import CustomModal from '../../components/CustomModal.jsx'
 import { useGlobalContext } from '../../context/globalProvider.js'
 import { signOut } from '../../lib/appwrite.js'
 import { sendNotification } from '../../lib/notifications.js'
-import { storeUser } from '../../lib/asyncStorage.js'
+import { storeAlternateButtonsState, storeUser } from '../../lib/asyncStorage.js'
 
 const profile = () => {
 
   const [modal, setModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
-  const {user, setUser, setIsLoggedIn, isOffline, setIsOffline} = useGlobalContext()
+  const {user, setUser, setIsLoggedIn, isOffline, setIsOffline, setAlternateButtons, alternateButtons} = useGlobalContext()
 
   return (
     <SafeAreaView className="h-full px-5 bg-primary">
@@ -56,6 +56,24 @@ const profile = () => {
               title="Edit custom drinks"
               handle={() => {router.push("/customDrinks")}}
               containerStyles={'mt-5'}
+            />
+            <Button
+              title="Display options"
+              containerStyles={'mt-5'}
+                handle={() => {
+                  setModal(true);
+                  setModalContent(
+                    <View>
+                      <Button
+                        title={`Alternate Buttons: ${alternateButtons ? "On" : "Off"}`}
+                        handle={() => {
+                          storeAlternateButtonsState(!alternateButtons)
+                          setAlternateButtons(!alternateButtons)
+                        }}
+                      />
+                    </View>
+                  )
+                }}
             />
             <Button
               title="Log out"
