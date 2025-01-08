@@ -9,7 +9,7 @@ import CircularProgress from 'react-native-circular-progress-indicator'
 import { createLog, getUserDrinks, getUserLogs } from '../lib/appwrite'
 import { waterId } from '../constants/other'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { getStoredUserDrinks, storeLog } from '../lib/asyncStorage'
+import { getStoredLogs, getStoredUserDrinks, storeLog } from '../lib/asyncStorage'
 
 const WaterInfoPage = () => {
 
@@ -78,13 +78,21 @@ const WaterInfoPage = () => {
 
     const previousDrink = async () => {
         try {
-            const logs = await getUserLogs(user.$id)
-            console.log(logs.length)
-            const lastLog = logs[(logs.length - 1)]
 
-            console.log(lastLog)
-
-            await createLog(user.$id, lastLog.drink.$id, parseFloat(lastLog.volume), new Date())
+            if(isOffline){
+                const logs = await getStoredLogs()
+                const lastLog = logs[(logs.length - 1)]
+                
+                await storeLog(lastLog.drink, lastLog.volume, new Date())
+            }else{
+                const logs = await getUserLogs(user.$id)
+                console.log(logs.length)
+                const lastLog = logs[(logs.length - 1)]
+    
+                console.log(lastLog)
+    
+                await createLog(user.$id, lastLog.drink.$id, parseFloat(lastLog.volume), new Date())
+            }
             getInfoFromDrinks()
 
         } catch (error) {

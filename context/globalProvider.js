@@ -286,10 +286,16 @@ export const GlobalProvider = ({children}) => {
             if(isOffline){
                 info = await getStoredUserInfo()
             }else{
-               info = await getUserInfo(user.$id)
+                info = await getUserInfo(user.$id)
             }
 
             let goal = info.weight * 35
+            console.log("The water goal will be: " + goal)
+
+            if(isOffline){
+                setWaterGoal(goal)
+                return
+            }
 
             //increase water intake based on age
             let age = calculateAge(new Date(info.dateOfBirth))
@@ -347,9 +353,12 @@ export const GlobalProvider = ({children}) => {
 
                 let hours = 0
                 let alcoholDrank = false
-
+                
                 todaysLogs.forEach(log => {
                     waterDrankToday += log.volume
+
+                    if(isOffline) return
+
                     sugarFromDrinksToday += (parseFloat(log.drink.sugar) / 100) * log.volume
                     caloriesFromDrinksToday += (parseFloat(log.drink.calories) / 100) * log.volume
 
@@ -368,11 +377,14 @@ export const GlobalProvider = ({children}) => {
                 })
                 
                 setWaterDrank(waterDrankToday)
+
+                if(isOffline) return
+
                 setSugarFromDrinks(sugarFromDrinksToday)
                 setCaloriesFromDrinks(caloriesFromDrinksToday)
                 setAlcoholFromDrinks(alcoholFromDrinksToday)
 
-                const {gender, weight} = isOffline ? await getStoredUserInfo() : await getUserInfo(user.$id);
+                const {gender, weight} =  await getUserInfo(user.$id);
 
                 let alcoholLevelBeforeTime = (alcoholFromDrinksToday / (weight * (gender == 'male' ? 0.68 : 0.55))) / 10
                 let alcoholLevelNow = (alcoholLevelBeforeTime - 0.015 * hours) 
@@ -382,7 +394,7 @@ export const GlobalProvider = ({children}) => {
                 setTimeTillAlcZero(timeTillZero)
             } catch (error) {
                 console.log("Couldn't calculate water drank due too: " + error)
-                Alert.alert("Error getting info from drinks")
+                //Alert.alert("Error getting info from drinks")
             }
         }
     }

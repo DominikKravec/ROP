@@ -114,39 +114,33 @@ const GraphPage = () => {
 
   return (
     <SafeAreaView className="justify-center items-center w-[100vw] h-full px-8">
-      
-      <View className="h-[50%] justify-center items-center">
+      {!isOffline ? (
+       <>
+        <View className="h-[50%] justify-center items-center">
 
-        <View className="border-2 border-blue p-5 rounded-2xl">
-          <View className=" w-[70vw] justify-center items-center p-2">
-            <Text className="text-2xl text-blue">
-              Sugar from drinks: {Math.round(sugarFromDrinks)}g
-            </Text>
-          </View>
-          <View className=" w-[70vw] justify-center items-center p-2 mt-5">
-            <Text className="text-2xl text-blue">
-              Alcohol level: {alcoholLevel > 0 ? Math.round(alcoholLevel * 100) / 100 : 0}%
-              {alcoholLevel > 0 ? `\nTime untill 0: ${Math.ceil(timeTillAlcZero * 100) / 10}h` : ''} {/* change this when working with alcohol level */}
-            </Text>
-            
-          </View>
-          <View className=" w-[70vw] justify-center items-center p-2 mt-5">
-            <Text className="text-2xl text-blue">
-              Calories: {caloriesFromDrinks}
-            </Text>
+          <View className="border-2 border-blue p-5 rounded-2xl">
+            <View className=" w-[70vw] justify-center items-center p-2">
+              <Text className="text-2xl text-blue">
+                Sugar from drinks: {Math.round(sugarFromDrinks)}g
+              </Text>
+            </View>
+            <View className=" w-[70vw] justify-center items-center p-2 mt-5">
+              <Text className="text-2xl text-blue">
+                Alcohol level: {alcoholLevel > 0 ? Math.round(alcoholLevel * 100) / 100 : 0}%
+                {alcoholLevel > 0 ? `\nTime untill 0: ${Math.ceil(timeTillAlcZero * 100) / 10}h` : ''} {/* change this when working with alcohol level */}
+              </Text>
+              
+            </View>
+            <View className=" w-[70vw] justify-center items-center p-2 mt-5">
+              <Text className="text-2xl text-blue">
+                Calories: {caloriesFromDrinks}
+              </Text>
+            </View>
           </View>
         </View>
-      </View>
-
-     
-      
-      <View className=" border-2 border-blue h-[50%] w-full rounded-3xl justify-center items-center" onLayout={handleLayout} >
-        {isOffline ? 
-          <View className='h-full justify-center items-center'>
-            <Text className="text-2xl text-blue-200 text-center">Graphs can only be viewed while online</Text>
-          </View> :
+ 
+        <View className=" border-2 border-blue h-[50%] w-full rounded-3xl justify-center items-center" onLayout={handleLayout} >
           <>
-
             <ScrollView
               horizontal={false}
               pagingEnabled={true} 
@@ -221,8 +215,14 @@ const GraphPage = () => {
 
             </ScrollView>
           </>
-        }
-      </View>
+          
+        </View>
+       </> 
+      ) : 
+        <View>
+          <Text className="text-blue text-2xl text-center">You can only view this page when online</Text>
+        </View>
+      }
     </SafeAreaView>
   )
 }
