@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { createLog, getCurrentUser, getTodaysUserLogs, getUserInfo, getUserSettings } from "../lib/appwrite";
 import * as Notifications from 'expo-notifications'
 import { scheduleDailyNotifications } from "../lib/notifications";
-import { weatherApiKey } from "../constants/other";
+import { waterId, weatherApiKey } from "../constants/other";
 import * as Location from 'expo-location';
 import { emptyLogStorage, getAlternateButtonsState, getStoredLogs, getStoredUser, getStoredUserInfo, getStoredUserSttings, storeUser, storeUserInfo, storeUserSettings } from "../lib/asyncStorage";
 import * as Network from 'expo-network';
@@ -355,6 +355,16 @@ export const GlobalProvider = ({children}) => {
                 let alcoholDrank = false
                 
                 todaysLogs.forEach(log => {
+
+                    if(!log.drink){
+                        log.drink = {
+                            $id: waterId,
+                            sugar: 0,
+                            calories: 0,
+                            alcohol: 0
+                        }
+                    }
+
                     waterDrankToday += log.volume
 
                     if(isOffline) return
