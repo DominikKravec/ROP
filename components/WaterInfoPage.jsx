@@ -79,7 +79,8 @@ const WaterInfoPage = () => {
     const previousDrink = async () => {
         try {
             const logs = await getUserLogs(user.$id)
-            const lastLog = logs[logs.length - 1]
+            console.log(logs.length)
+            const lastLog = logs[(logs.length - 1)]
 
             console.log(lastLog)
 

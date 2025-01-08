@@ -13,7 +13,7 @@ import { schedulePushNotification } from '../../lib/notifications.js'
 
 const personalInfo = () => {
 
-  const {user, calculateWater} = useGlobalContext()
+  const {user, calculateWater, userSettings} = useGlobalContext()
 
   const [documentId, setDocumentId] = useState('')
   const [weight, setWeight] = useState(0)
@@ -61,11 +61,13 @@ const personalInfo = () => {
 
   const daysInMonths = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-  const save = () => {
+  const save =  async () => {
     if(dateOfBirth.date <= daysInMonths[dateOfBirth.month - 1] && weight > 0){
       try {
-        saveUserInfo(documentId, weight, gender, dateOfBirth)
-        calculateWater()
+        await saveUserInfo(documentId, weight, gender, dateOfBirth)
+        if(!userSettings.customWaterGoal){
+          calculateWater()
+        }
         router.replace('/profile')  
       } catch (error) {
         console.log(error)

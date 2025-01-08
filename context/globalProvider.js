@@ -144,6 +144,8 @@ export const GlobalProvider = ({children}) => {
                         storeUserSettings(settings)
                         if(settings.customWaterGoal){
                             setWaterGoal(settings.customWaterGoal)
+                        }else{
+                            calculateWater()
                         }
                     }
     
@@ -176,7 +178,7 @@ export const GlobalProvider = ({children}) => {
         aplyUserInfo()
         aplyUserSettings()
         getInfoFromDrinks()
-        calculateWater()
+
     
     }, [user, isOffline])
 

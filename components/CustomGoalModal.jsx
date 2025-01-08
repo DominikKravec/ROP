@@ -14,7 +14,7 @@ const CustomGoalModal = ({closeModal}) => {
       {label: 'oz', value: 2}
     ]
 
-    const {user, userSettings, setUserSettings, setWaterGoal, calculateWater} = useGlobalContext()
+    const {user, userSettings, setUserSettings, setWaterGoal, calculateWater, scheduleNotifications} = useGlobalContext()
     
     const [unit, setUnit] = useState(options[0].label)
     const [amount, setAmount] = useState(userSettings.customWaterGoal)
@@ -38,7 +38,7 @@ const CustomGoalModal = ({closeModal}) => {
               setUserSettings({...userSettings, customWaterGoal: (parseFloat(amount) * volumeUnits[unit])})
               updateUserSettings(user.$id, {...userSettings, customWaterGoal: (parseFloat(amount) * volumeUnits[unit])})
               setWaterGoal((parseFloat(amount) * volumeUnits[unit]))
-              calculateWater()
+              scheduleNotifications(parseFloat(amount) * volumeUnits[unit])
               closeModal()
             }}  
         />
@@ -46,7 +46,7 @@ const CustomGoalModal = ({closeModal}) => {
         <Button
           title="Remove custom goal"
           containerStyles={'mt-5'}
-          handle={() => {
+          handle={async () => {
             setUserSettings({...userSettings, customWaterGoal: null})
             updateUserSettings(user.$id, {...userSettings, customWaterGoal: null})
             setWaterGoal(calculateWater())
