@@ -1,5 +1,5 @@
 import { View, Text, TextInput } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useGlobalContext } from '../../context/globalProvider'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Input from '../../components/Input.jsx'
@@ -14,11 +14,20 @@ const DrinkEdit = () => {
 
   const {editedDrink, user, setCustomDrinks, customDrinks} = useGlobalContext()
 
-  const [name, setName] = useState(editedDrink ? editedDrink.name : "")
-  const [sugar, setSugar] = useState(editedDrink ? editedDrink.sugar : 0)
-  const [apv, setApv] = useState(editedDrink ? editedDrink.alcohol : 0)
-  const [calories, setCalories] = useState(editedDrink ? editedDrink.calories : 0)
+  const [name, setName] = useState("")
+  const [sugar, setSugar] = useState(0)
+  const [apv, setApv] = useState(0)
+  const [calories, setCalories] = useState(0)
   const [sugarUnit, setSugarUnit] = useState(sugarUnitOptions[0])
+
+  useEffect(() => {
+    if(editedDrink){
+      setName(editedDrink.name)
+      setSugar(editedDrink.sugar)
+      setApv(editedDrink.apv)
+      setCalories(editedDrink.calories)
+    }
+  }, [])
 
   const submit = async () => {
 
@@ -65,6 +74,7 @@ const DrinkEdit = () => {
                 className='border-b-2 border-b-blue text-2xl w-18 text-blue '
                 keyboardType='number-pad'
                 value={apv}
+                defaultValue={(apv ? apv + "" : 0)}
                 onChangeText={(text) => {setApv(text)}}
           />
           <Text className="text-2xl text-blue">%</Text>
@@ -91,6 +101,7 @@ const DrinkEdit = () => {
                 className='border-b-2 border-b-blue text-2xl w-18 text-blue '
                 keyboardType='number-pad'
                 value={calories}
+                defaultValue={(calories ? calories + "" : 0)}
                 onChangeText={(text) => {setCalories(text)}}
           />
         </View> 

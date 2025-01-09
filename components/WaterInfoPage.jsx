@@ -29,7 +29,6 @@ const WaterInfoPage = () => {
             if(isOffline){
                 console.log("Getting drinks from storage")
                 const drinks = await getStoredUserDrinks()
-                console.log(drinks)
                 setDrinkOptions(drinks)
             }else{
                 const drinks = await getUserDrinks(user.$id)

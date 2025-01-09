@@ -62,7 +62,12 @@ const GraphPage = () => {
           let date = new Date(log.timeOfDrink)
           let label = "" + date.getDate() + "." + (date.getMonth() + 1)
 
-          let sugar = (parseFloat(log.drink.sugar) / 100) * parseFloat(log.volume)
+          let sugar
+          try{
+            sugar  = (parseFloat(log.drink.sugar) / 100) * parseFloat(log.volume)
+          }catch(error){
+            sugar = 0
+          }
 
           for(idx in dailyInfoSugar){
             if(dailyInfoSugar[idx].label == label){
@@ -82,6 +87,8 @@ const GraphPage = () => {
           let label = "" + date.getDate()
           dailyInfoWater.push({label: label, value: 0})  
         }
+
+        console.log(monthLogs)
 
         monthLogs.forEach(log => {
           let date = new Date(log.timeOfDrink)
@@ -210,9 +217,6 @@ const GraphPage = () => {
                   width={300}
                 />
               </View>
-
-
-
             </ScrollView>
           </>
           

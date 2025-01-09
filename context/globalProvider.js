@@ -136,6 +136,8 @@ export const GlobalProvider = ({children}) => {
                         setUserSettings(settings)
                         if(settings.customWaterGoal){
                             setWaterGoal(settings.customWaterGoal)
+                        }else{
+                            calculateWater()
                         }
                     }else{
                         console.log("Aplying user settings")

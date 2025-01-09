@@ -18,7 +18,7 @@ const personalInfo = () => {
   const [documentId, setDocumentId] = useState('')
   const [weight, setWeight] = useState(0)
   const [gender, setGender] = useState('male')
-  const [dateOfBirth, setDateOfBirth] = useState({  //change this so it has the users info
+  const [dateOfBirth, setDateOfBirth] = useState({
     date: 1,
     month: 1,
     year: 1980,
@@ -102,7 +102,6 @@ const personalInfo = () => {
           setDate={(date) => {setDateOfBirth({...dateOfBirth, date: date})}}
           setMonth={(month) => {setDateOfBirth({...dateOfBirth, month: month})}}
           setYear={(year) => {setDateOfBirth({...dateOfBirth, year: year})}}
-          
         />
       </View>
       <View className="w-[30vw] mt-5">
