@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useGlobalContext } from '../context/globalProvider'
 import { BarChart } from 'react-native-gifted-charts'
-import { getMonthLogs, getWeekLogs } from '../lib/appwrite'
+import { getLogsFromDate, getMonthLogs, getWeekLogs } from '../lib/appwrite'
+import CustomModal from '../components/CustomModal'
 
 const GraphPage = () => {
 
@@ -12,6 +13,9 @@ const GraphPage = () => {
   const [weeklyWater, setWeeklyWater] = useState([])
   const [weeklySugar, setWeeklySugar] = useState([])
   const [monthlyWater, setMonthlyWater] = useState([])
+  const [modal, setModal] = useState(false)
+  //const [modalDate, setModalDate] = useState('')
+  const [dateWater, setDateWater] = useState([])
 
   const [graphWindowHeight, setGraphWindowHeight] = useState(0)
 
@@ -22,6 +26,39 @@ const GraphPage = () => {
     const currentPage = Math.round(contentOffsety / (graphWindowHeight / 2)); // Calculate current page
     setActivePage(currentPage); // Update active page state
   };
+
+  const getDateWater = async (date) => {
+    try {
+      const logsFromDate = await getLogsFromDate(user.$id, date)
+      
+      let hourlyInfo = []
+      
+      for(let i = 0; i < 24; i += 2){
+
+        let time = new Date(date)
+        time.setHours(i, 0, 0, 0)
+        console.log(time)
+
+        hourlyInfo.push({value: 0, label: i, time: time})
+      }
+      
+      logsFromDate.forEach((log) => {
+        for(info of hourlyInfo){
+          let logTime = new Date(log.timeOfDrink)
+          //console.log(logTime)
+          if(logTime.getHours() >= info.time.getHours() && logTime.getHours() < info.time.getHours() + 2){
+            info.value += log.volume
+          }
+        }
+      })
+      
+      console.log(hourlyInfo)
+      setDateWater(hourlyInfo)
+
+    } catch (error) {
+      console.log("Error getting date water: ", error)
+    }
+  }
 
   useEffect(() => {
     const getLogs = async () => {
@@ -39,8 +76,8 @@ const GraphPage = () => {
           let date = new Date()
           date.setDate(date.getDate() - i)
           let label = "" + date.getDate() + "." + (date.getMonth() + 1)
-          dailyInfoWater.push({label: label, value: 0}) 
-          dailyInfoSugar.push({label: label, value: 0}) 
+          dailyInfoWater.push({label: label, value: 0, date: date}) 
+          dailyInfoSugar.push({label: label, value: 0, date: date}) 
         }
      
         //fill the array with data about water from logs
@@ -49,7 +86,6 @@ const GraphPage = () => {
           let label = "" + date.getDate() + "." + (date.getMonth() + 1)
 
           for(idx in dailyInfoWater){
-
             if(dailyInfoWater[idx].label == label){
               dailyInfoWater[idx].value += log.volume
             }
@@ -85,7 +121,7 @@ const GraphPage = () => {
           let date = new Date()
           date.setDate(date.getDate() - i)
           let label = "" + date.getDate()
-          dailyInfoWater.push({label: label, value: 0})  
+          dailyInfoWater.push({label: label, value: 0, date: date})  
         }
 
         monthLogs.forEach(log => {
@@ -172,6 +208,10 @@ const GraphPage = () => {
                   xAxisLabelTextStyle={{color: "#7DC9FF", fontSize: 11}}
                   rulesColor={'#A5D9FF'}
                   width={300}
+                  onPress={(item, index) => {
+                    getDateWater(item.date)
+                    setModal(true)
+                  }}
                 />
               </View>
 
@@ -193,6 +233,10 @@ const GraphPage = () => {
                   xAxisLabelTextStyle={{display: 'none'}}
                   rulesColor={'#A5D9FF'}
                   width={300}
+                  onPress={(item, index) => {
+                    getDateWater(item.date)
+                    setModal(true)
+                  }}
                 />
               </View>
 
@@ -225,6 +269,28 @@ const GraphPage = () => {
           <Text className="text-blue text-2xl text-center">You can only view this page when online</Text>
         </View>
       }
+      <CustomModal
+        modal={modal}
+        setModal={setModal}
+        modalContent={(
+          <View className="overflow-hidden">
+            <BarChart
+             frontColor={'#3CACFD'}
+            barWidth={12}
+            spacing={8}
+            data={dateWater}
+            barBorderRadius={5}
+            noOfSections={3}
+            xAxisColor={'#7DC9FF'}
+            yAxisColor={'#7DC9FF'}
+            yAxisTextStyle={{color: "#7DC9FF"}}
+            xAxisLabelTextStyle={{color: "#7DC9FF", fontSize: 11}}
+            rulesColor={'#A5D9FF'}
+            width={300}
+            />
+          </View>
+        )}
+      />
     </SafeAreaView>
   )
 }
