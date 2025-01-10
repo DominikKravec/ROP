@@ -22,14 +22,6 @@ export const GlobalProvider = ({children}) => {
     
     const [waterDrank, setWaterDrank] = useState(0)
 
-    const todayDate = new Date().toISOString().split('T')[0];
-
-    /*
-    const [waterUnit, setWaterUnit] = useState('ml')
-    const [cupVolume, setCupVolume] = useState(200)
-    const [reminderAmount, setReminderAmount] = useState()
-    */
-   
     const [waterGoal, setWaterGoal] = useState(2500)
     const [userSettings, setUserSettings] = useState({})
 
@@ -191,8 +183,8 @@ export const GlobalProvider = ({children}) => {
         const logs = await getStoredLogs()
 
         if(logs){
-            logs.forEach(log => {
-                createLog(userId, log.drink, log.volume, log.timeOfDrink)
+            logs.forEach(async (log) => {
+                await createLog(userId, log.drink, log.volume, log.timeOfDrink)
             })
         }
 
@@ -418,12 +410,6 @@ export const GlobalProvider = ({children}) => {
                 setWaterDrank, 
                 waterGoal,
                 setWaterGoal,
-                /*
-                waterUnit, 
-                setWaterUnit,
-                cupVolume, 
-                setCupVolume,
-                */
                 customDrinks,
                 setCustomDrinks,
                 setEditedDrink,

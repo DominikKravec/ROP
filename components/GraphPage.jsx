@@ -88,8 +88,6 @@ const GraphPage = () => {
           dailyInfoWater.push({label: label, value: 0})  
         }
 
-        console.log(monthLogs)
-
         monthLogs.forEach(log => {
           let date = new Date(log.timeOfDrink)
           let label = "" + date.getDate()

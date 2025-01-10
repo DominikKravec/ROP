@@ -1,5 +1,5 @@
 import { View, Text, Modal, Image } from 'react-native'
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Button from "../../components/Button.jsx"
 import { TouchableOpacity } from 'react-native'
@@ -13,12 +13,36 @@ import { useGlobalContext } from '../../context/globalProvider.js'
 import { signOut } from '../../lib/appwrite.js'
 import { sendNotification } from '../../lib/notifications.js'
 import { storeAlternateButtonsState, storeUser } from '../../lib/asyncStorage.js'
+import { readData } from '../../lib/healthConnect.js'
 
 const profile = () => {
 
   const [modal, setModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
-  const {user, setUser, setIsLoggedIn, isOffline, setIsOffline, setAlternateButtons, alternateButtons} = useGlobalContext()
+  const {user, setUser, setIsLoggedIn, isOffline, setIsOffline, setAlternateButtons, alternateButtons, getCurrentTemperature} = useGlobalContext()
+  const [temperature, setTemperature] = useState(0)
+  const [burnedCalories, setBurnedCalories] = useState(0)
+
+  useEffect(() => {
+    const getTemp = async () => {
+      const temp = await getCurrentTemperature()
+      setTemperature(temp)
+    }
+
+    const getCalories = async () => {
+      try {
+        const physicalActivityData = await readData()
+        const calories = physicalActivityData[0].energy.inKilocalories
+        console.log("Burned calories" + calories)
+        setBurnedCalories(calories)
+      } catch (error) {
+        console.log("Error getting calories burned: ", error)
+      }
+    }
+
+    getTemp()
+    getCalories()
+  })
 
   return (
     <SafeAreaView className="h-full px-5 bg-primary">
@@ -106,6 +130,9 @@ const profile = () => {
                         containerStyles={'mt-5'}
                         handle={() => {setIsOffline(true)}}
                       />
+
+                      <Text className='text-xl text-blue text-center mt-5'>It is {temperature} degrees celsius outside</Text>
+                      <Text className='text-xl text-blue text-center mt-5'>The user has burned {burnedCalories} calories</Text>
                     </View>
                   )
                 }}

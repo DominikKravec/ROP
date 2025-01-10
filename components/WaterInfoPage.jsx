@@ -38,10 +38,37 @@ const WaterInfoPage = () => {
             console.log(error)
           }
         }
+
+        const checkTemperature = async () => {
+            if(!isOffline){
+                try {
+                    const temp = await getCurrentTemperature()
+
+                    if(temp > 33){
+                        setModal(true)
+                        setModalContent(
+                            <View className="justify-center items-center">
+                                <Text className=" text-blue text-2xl">It is very hot outside your water intake has been increased by one liter</Text>
+                            </View>
+                        )
+                    }else if(temp > 25){
+                        setModal(true)
+                        setModalContent(
+                            <View className="justify-center items-center">
+                                <Text className=" text-blue text-2xl">It is hot outside your water intake has been increased by hlaf a liter</Text>
+                            </View>
+                        )
+                    }
+                } catch (error) {
+                    console.log("Error checking temp: ", error)
+                }
+            }
+        }
         
         getDrinks()
-        getCurrentTemperature()
-      }, [isOffline])
+        checkTemperature()
+        
+    }, [isOffline])
 
     useEffect(() => {
         if(userSettings.volumeUnit){
@@ -85,10 +112,8 @@ const WaterInfoPage = () => {
                 await storeLog(lastLog.drink, lastLog.volume, new Date())
             }else{
                 const logs = await getUserLogs(user.$id)
-                console.log(logs.length)
+                
                 const lastLog = logs[(logs.length - 1)]
-    
-                console.log(lastLog)
     
                 await createLog(user.$id, lastLog.drink.$id, parseFloat(lastLog.volume), new Date())
             }

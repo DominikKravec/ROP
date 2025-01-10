@@ -29,7 +29,6 @@ const AddDrinkModal = ({drinkOptions, setModal}) => {
       try {
         if(isOffline){
           console.log("Creating log locally")
-          console.log(await getStoredLogs())
           await storeLog(drinkType.$id, unit.label == 'cp' ? (parseFloat(amount) * userSettings.cupSize) : (parseFloat(amount) * volumeUnits[unit]), new Date())
         }else{
           await createLog(user.$id, drinkType.$id, unit == 'cp' ? (parseFloat(amount) * userSettings.cupSize) : (parseFloat(amount) * volumeUnits[unit]), new Date())
