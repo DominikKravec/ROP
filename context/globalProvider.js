@@ -84,7 +84,6 @@ export const GlobalProvider = ({children}) => {
                         setIsLoggedIn(true)
                         setUser(res)
                         storeUser(res)
-                        handleRegainedConnection(res.$id)
                     }else{
                         setIsLoggedIn(false)
                         setUser(null)
@@ -136,6 +135,7 @@ export const GlobalProvider = ({children}) => {
                         const settings = await getUserSettings(user.$id)
                         setUserSettings(settings)
                         storeUserSettings(settings)
+                        handleRegainedConnection(user.$id)
                         if(settings.customWaterGoal){
                             setWaterGoal(settings.customWaterGoal)
                         }else{
@@ -177,19 +177,23 @@ export const GlobalProvider = ({children}) => {
     }, [user, isOffline])
 
     const handleRegainedConnection = async (userId) => {
-
         console.log("Handling regained connection")
-        
-        const logs = await getStoredLogs()
-
-        if(logs){
-            logs.forEach(async (log) => {
-                await createLog(userId, log.drink, log.volume, log.timeOfDrink)
-            })
+        try {
+            
+            const logs = await getStoredLogs()
+            if(logs.length > 0){
+                console.log("Adding stored logs to database")
+                for(let log of logs){
+                    await createLog(userId, log.drink, log.volume, log.timeOfDrink)
+                }
+                getInfoFromDrinks()
+            }
+    
+            await emptyLogStorage()
+            
+        } catch (error) {
+            console.log("Error handling regained connection", error)
         }
-
-        emptyLogStorage()
-        getInfoFromDrinks()
     }
 
     const getCurrentLocation = async () => {
@@ -329,6 +333,7 @@ export const GlobalProvider = ({children}) => {
       }
     
     const getInfoFromDrinks = async () => {
+        console.log("Getting info from drinks") 
         if(user && user.$id){
             try {
                 let todaysLogs = []
@@ -349,7 +354,6 @@ export const GlobalProvider = ({children}) => {
                 let alcoholDrank = false
                 
                 todaysLogs.forEach(log => {
-
                     if(!log.drink){
                         log.drink = {
                             $id: waterId,

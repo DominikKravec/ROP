@@ -80,10 +80,11 @@ const WaterInfoPage = () => {
         try {
             if(isOffline){
                 await storeLog(waterId, userSettings.cupSize, new Date())
+                setWaterDrank(waterDrank + userSettings.cupSize)
             }else{
                 await createLog(user.$id, waterId, userSettings.cupSize, new Date())
+                getInfoFromDrinks()
             }
-            getInfoFromDrinks()
         } catch (error) {
             console.log("Failed to add cup due too: " + error)
         }
@@ -92,11 +93,12 @@ const WaterInfoPage = () => {
     const halfCup = async () => {
         try {
             if(isOffline){
-                await storeLog(waterId, userSettings.cupSize / 2, new Date())                
+                await storeLog(waterId, userSettings.cupSize / 2, new Date())
+                setWaterDrank(waterDrank + userSettings.cupSize / 2)                
             }else{
                 await createLog(user.$id, waterId, userSettings.cupSize / 2, new Date())
+                getInfoFromDrinks()
             }
-            getInfoFromDrinks()
         } catch (error) {
             console.log("Failed to add half cup due too: " + error)
         }
@@ -110,14 +112,15 @@ const WaterInfoPage = () => {
                 const lastLog = logs[(logs.length - 1)]
                 
                 await storeLog(lastLog.drink, lastLog.volume, new Date())
+                setWaterDrank(waterDrank + lastLog.volume)
             }else{
                 const logs = await getUserLogs(user.$id)
                 
                 const lastLog = logs[(logs.length - 1)]
     
                 await createLog(user.$id, lastLog.drink.$id, parseFloat(lastLog.volume), new Date())
+                getInfoFromDrinks()
             }
-            getInfoFromDrinks()
 
         } catch (error) {
             console.log("Failed to add previous drink due too: " + error)
