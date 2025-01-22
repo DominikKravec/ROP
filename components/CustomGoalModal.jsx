@@ -49,7 +49,7 @@ const CustomGoalModal = ({closeModal}) => {
           handle={async () => {
             setUserSettings({...userSettings, customWaterGoal: null})
             updateUserSettings(user.$id, {...userSettings, customWaterGoal: null})
-            setWaterGoal(calculateWater())
+            await calculateWater()
             closeModal()
           }}
         />

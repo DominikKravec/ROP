@@ -302,27 +302,34 @@ export const GlobalProvider = ({children}) => {
                 goal += 350
                 age -= 10
             }
-
-            const weatherCalculation = true //remove this when you add it to settings
             
-            //increase water intake based on temperature
-            if(weatherCalculation){
+            try {
+                //increase water intake based on temperature
                 let temperature = await getCurrentTemperature()
                 if(temperature > 33){
                     goal += 1000
                 }else if(temperature > 25){
                     goal += 500
                 }
+                
+            } catch (error) {
+                console.log("Error adjusting to weather: " + error)
             }
+            
 
             //increasing water intake based on physical activity tracked through health connect
-            const physicalActivityData = await readData()
-
-            const burnedCalories = physicalActivityData[0].energy.inKilocalories
-            console.log("Burned calories: " + burnedCalories)
-
-            //a person should drink about 0.3 litres more for every 300-500 calories burned
-            goal += (burnedCalories / 400) * 300 
+            try {
+                const physicalActivityData = await readData()
+    
+                const burnedCalories = physicalActivityData[0].energy.inKilocalories
+                console.log("Burned calories: " + burnedCalories)
+    
+                //a person should drink about 0.3 litres more for every 300-500 calories burned
+                goal += (burnedCalories / 400) * 300 
+                
+            } catch (error) {
+                console.log("Error reading calorie data: " + error)
+            }
 
             setWaterGoal(Math.round(goal))
             scheduleNotifications(Math.round(goal))
