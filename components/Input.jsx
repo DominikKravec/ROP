@@ -3,7 +3,7 @@ import React, {useState} from 'react'
 
 import { icons } from '../constants'
 
-const Input = ({ title, value, placeholder, handleChangeText, otherStyles, ...props}) => {
+const Input = ({ title, value, placeholder, handleChangeText, otherStyles, type = 'text', ...props}) => {
   const [showPassword, setShowPassword] = useState(false)
 
   return (
@@ -12,6 +12,7 @@ const Input = ({ title, value, placeholder, handleChangeText, otherStyles, ...pr
         <TextInput
             className="flex-1 text-blue text-xl"
             value={value}
+            type={type}
             defaultValue={(value ? value + "" : 0)}
             placeholder={placeholder}
             placeholderTextColor="#A5D9FF"

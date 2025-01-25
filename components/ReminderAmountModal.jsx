@@ -20,6 +20,7 @@ const ReminderAmountModal = ({closeModal}) => {
           placeholder={"Amount"}
           value={amount}
           handleChangeText={(text) => {setAmount(parseInt(text))}}
+          type='number'
         />
         <Button
             title={'Set reminder amount to ' + amount}

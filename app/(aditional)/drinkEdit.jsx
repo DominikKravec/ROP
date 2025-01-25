@@ -8,11 +8,14 @@ import { router } from 'expo-router'
 import InputUnit from '../../components/InputUnit.jsx'
 import { addCustomDrink, getCustomDrinks, getUserDrinks, updateDrink } from '../../lib/appwrite.js'
 import { storeUserDrinks } from '../../lib/asyncStorage.js'
+import CustomModal from '../../components/CustomModal.jsx'
 
 const DrinkEdit = () => {
   const sugarUnitOptions = [{label: "g", value: 0}, {label: "oz", value: 1},]
 
   const {editedDrink, user, setCustomDrinks, customDrinks} = useGlobalContext()
+
+  const [modal, setModal] = useState(false)
 
   const [name, setName] = useState("")
   const [sugar, setSugar] = useState(0)
@@ -31,7 +34,10 @@ const DrinkEdit = () => {
 
   const submit = async () => {
 
-    if(apv > 100) setApv(100)
+    if(apv > 100){
+      setModal(true)
+      return
+    }
 
     if(!editedDrink){
       try {
@@ -111,6 +117,16 @@ const DrinkEdit = () => {
         title={editedDrink ? 'Save' : 'Add'}
         handle={() => {submit()}}
         containerStyles={'mt-5'}
+      />
+
+      <CustomModal
+        modal={modal}
+        setModal={setModal}
+        modalContent={(
+          <View>
+            <Text className="text-2xl text-blue">Apv must be between 0 and 100</Text>
+          </View>
+        )}
       />
     </SafeAreaView>
   )
