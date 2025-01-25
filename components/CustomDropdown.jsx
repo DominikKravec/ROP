@@ -1,8 +1,11 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import { Dropdown } from 'react-native-element-dropdown'
+import { useGlobalContext } from '../context/globalProvider'
 
 const CustomDropdown = ({options, value, handleChangeValue}) => {
+
+    const {darkMode} = useGlobalContext()
     return (
         <View className="flex-row justify-center items-center">
             <Text className="text-blue text-2xl absolute z-10 ">{value}</Text>
@@ -19,7 +22,7 @@ const CustomDropdown = ({options, value, handleChangeValue}) => {
                 placeholder="Select drink"
                 onChange={handleChangeValue}
                 renderItem={item => {return(
-                    <View className="bg-primary w-fit">
+                    <View className={`${darkMode ? 'bg-secondary' : 'bg-primary'} w-fit`}>
                         <Text className="text-blue text-xl">{item.label}</Text>
                     </View>
                 )}}
@@ -34,7 +37,7 @@ const styles = StyleSheet.create({
 
     placeholder: {
       fontSize: 24,
-      color: '#fefeff',
+      color: '#fefeff00',
       marginLeft: 8,
     },
     
@@ -50,7 +53,8 @@ const styles = StyleSheet.create({
     },
     text: {
       fontSize: 24,
-      color: '#fefeff',
+      color: '#fefeff0',
+      display: 'none',
       marginLeft: 8,
     },
 })

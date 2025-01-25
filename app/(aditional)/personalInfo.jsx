@@ -13,7 +13,7 @@ import { schedulePushNotification } from '../../lib/notifications.js'
 
 const personalInfo = () => {
 
-  const {user, calculateWater, userSettings} = useGlobalContext()
+  const {user, calculateWater, userSettings, darkMode} = useGlobalContext()
 
   const [documentId, setDocumentId] = useState('')
   const [weight, setWeight] = useState(0)
@@ -77,7 +77,7 @@ const personalInfo = () => {
   }
 
   return (
-    <SafeAreaView className="bg-primary h-full justify-center px-10 items-center">
+    <SafeAreaView className={`${darkMode ? 'bg-secondary' : 'bg-primary'} h-full justify-center px-10 items-center`}>
       
       <View className="w-[30vw]">
         <Text className="text-3xl text-blue">

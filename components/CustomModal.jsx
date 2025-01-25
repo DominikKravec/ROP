@@ -1,8 +1,10 @@
 import { View, Text, Modal, TouchableOpacity, Image } from 'react-native'
 import React from 'react'
 import icons from '../constants/icons'
+import { useGlobalContext } from '../context/globalProvider'
 
 const CustomModal = ({modalContent, modal, setModal}) => {
+  const {darkMode} = useGlobalContext()
   return (
     <Modal
         animationType='slide'
@@ -13,7 +15,7 @@ const CustomModal = ({modalContent, modal, setModal}) => {
         <View 
             className='h-full justify-center items-center'
         >
-            <View className='bg-primary border-blue border-4 rounded-xl p-5 pt-10'>
+            <View className={`${darkMode ? 'bg-secondary' : 'bg-primary'} border-blue border-4 rounded-xl p-5 pt-10`}>
                 
                 <TouchableOpacity
                     className='absolute top-2 right-2'

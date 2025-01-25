@@ -12,14 +12,15 @@ import CustomModal from '../../components/CustomModal.jsx'
 import { useGlobalContext } from '../../context/globalProvider.js'
 import { signOut } from '../../lib/appwrite.js'
 import { sendNotification } from '../../lib/notifications.js'
-import { storeAlternateButtonsState, storeUser } from '../../lib/asyncStorage.js'
+import { storeAlternateButtonsState, storeDarkMode, storeUser } from '../../lib/asyncStorage.js'
 import { readData } from '../../lib/healthConnect.js'
 
 const profile = () => {
 
   const [modal, setModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
-  const {user, setUser, setIsLoggedIn, isOffline, setIsOffline, setAlternateButtons, alternateButtons, getCurrentTemperature} = useGlobalContext()
+  const {user, setUser, setIsLoggedIn, isOffline, setIsOffline, setAlternateButtons, alternateButtons, getCurrentTemperature, darkMode, setDarkMode} = useGlobalContext()
+  console.log("🚀 ~ profile ~ darkMode:", darkMode)
   const [temperature, setTemperature] = useState(0)
   const [burnedCalories, setBurnedCalories] = useState(0)
 
@@ -46,7 +47,7 @@ const profile = () => {
   })
 
   return (
-    <SafeAreaView className="h-full px-5 bg-primary">
+    <SafeAreaView className={`h-full px-5 ${darkMode ? 'bg-secondary' : 'bg-primary'}`}>
       {isOffline ? 
         <View className='h-full justify-center items-center'>
           <Text className="text-2xl text-blue-200 text-center">The profile tab can only be used when online</Text>
@@ -94,6 +95,14 @@ const profile = () => {
                         handle={() => {
                           storeAlternateButtonsState(!alternateButtons)
                           setAlternateButtons(!alternateButtons)
+                        }}
+                      />
+                      <Button
+                        title={`Dark mode: ${darkMode ? "On" : "Off"}`}
+                        containerStyles={'mt-5'}
+                        handle={() => {
+                          storeDarkMode(!darkMode)
+                          setDarkMode(!darkMode)
                         }}
                       />
                     </View>

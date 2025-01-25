@@ -22,12 +22,12 @@ const TabIcon = ({icon, iconInactive, color, title, focused}) => {
 
 const TabsLayout = () => {
 
-  const {isOffline} = useGlobalContext()
+  const {isOffline, darkMode} = useGlobalContext()
 
   return (
     <>
       {isOffline && (
-        <View className="w-full justify-center items-center mt-10 px-5 bg-primary">
+        <View className={`w-full justify-center items-center mt-10 px-5 ${darkMode ? 'bg-secondary' : 'bg-primary'}`}>
           <Text className="text-blue-200 text-xl text-center">You are offline the app will only do basic operations</Text>
         </View>
       )}
@@ -39,6 +39,7 @@ const TabsLayout = () => {
           tabBarStyle: {
             borderTopWidth: 3,
             borderTopColor: '#3CACFD',
+            backgroundColor: darkMode ? '#1B1B1B' : '#fefeff',
             height: 84,
           }
         }}

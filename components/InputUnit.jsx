@@ -1,8 +1,10 @@
 import { View, Text, TextInput, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import { Dropdown } from 'react-native-element-dropdown'
+import { useGlobalContext } from '../context/globalProvider'
 
 const InputUnit = ({options, value, unit, handleChangeText, handleChangeUnit}) => {
+  const {darkMode} = useGlobalContext()
   return (
     <View className='flex flex-row justify-center h-10 items-center'>
         <TextInput
@@ -23,7 +25,7 @@ const InputUnit = ({options, value, unit, handleChangeText, handleChangeUnit}) =
             valueField='value'
             onChange={handleChangeUnit}
             renderItem={item => {return(
-                <View className="bg-primary">
+                <View className={`${darkMode ? 'bg-secondary' : 'bg-primary'}`}>
                     <Text className="text-blue text-xl">{item.label}</Text>
                 </View>
             )}}

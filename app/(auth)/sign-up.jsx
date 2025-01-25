@@ -23,7 +23,7 @@ const SignUp = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const {setUser, setIsLoggedIn} = useGlobalContext()
+  const {setUser, setIsLoggedIn, darkMode} = useGlobalContext()
 
   const register = async () => {
     if(username.trim() && email.trim() && password.trim() && password.length >= 8 && isValidEmail(email.trim())){
@@ -59,7 +59,7 @@ const SignUp = () => {
   }
 
   return (
-    <SafeAreaView className="h-full bg-primary">
+    <SafeAreaView className={`h-full ${darkMode ? 'bg-secondary' : 'bg-primary'}`}>
       <View className=" justify-center items-center h-full">
         <Input
           placeholder={"email"}

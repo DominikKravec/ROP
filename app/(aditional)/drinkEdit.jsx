@@ -13,7 +13,7 @@ import CustomModal from '../../components/CustomModal.jsx'
 const DrinkEdit = () => {
   const sugarUnitOptions = [{label: "g", value: 0}, {label: "oz", value: 1},]
 
-  const {editedDrink, user, setCustomDrinks, customDrinks} = useGlobalContext()
+  const {editedDrink, user, setCustomDrinks, customDrinks, darkMode} = useGlobalContext()
 
   const [modal, setModal] = useState(false)
 
@@ -66,7 +66,7 @@ const DrinkEdit = () => {
   }
   
   return (
-    <SafeAreaView className="h-full justify-center items-center bg-primary">
+    <SafeAreaView className={`h-full justify-center items-center ${darkMode ? 'bg-secondary' : 'bg-primary'}`}>
       <Input
         placeholder={"drink name"}
         value={name}

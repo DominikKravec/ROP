@@ -11,7 +11,7 @@ import { getCustomDrinks } from '../../lib/appwrite'
 
 const customDrinks = () => {
 
-    const {customDrinks, setEditedDrink, setCustomDrinks, user} = useGlobalContext()
+    const {customDrinks, setEditedDrink, setCustomDrinks, user, darkMode} = useGlobalContext()
 
     useEffect(() => {
         const getDrinks = async () => {
@@ -31,7 +31,7 @@ const customDrinks = () => {
     }
 
     return (
-        <SafeAreaView className="justify-center items-center h-full p-10 bg-primary">
+        <SafeAreaView className={`justify-center items-center h-full p-10 ${darkMode ? 'bg-secondary' : 'bg-primary'}`}>
             <FlatList
                 data={customDrinks}
                 keyExtractor={(item) => {item.$id}}

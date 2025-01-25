@@ -4,7 +4,7 @@ import * as Notifications from 'expo-notifications'
 import { scheduleDailyNotifications } from "../lib/notifications";
 import { waterId, weatherApiKey } from "../constants/other";
 import * as Location from 'expo-location';
-import { emptyLogStorage, getAlternateButtonsState, getStoredLogs, getStoredUser, getStoredUserInfo, getStoredUserSttings, storeUser, storeUserInfo, storeUserSettings } from "../lib/asyncStorage";
+import { emptyLogStorage, getAlternateButtonsState, getStoredLogs, getStoredUser, getDarkModeState, getStoredUserInfo, getStoredUserSttings, storeUser, storeUserInfo, storeUserSettings } from "../lib/asyncStorage";
 import * as Network from 'expo-network';
 import { readData } from "../lib/healthConnect";
 
@@ -32,7 +32,9 @@ export const GlobalProvider = ({children}) => {
     const [alcoholFromDrinks, setAlcoholFromDrinks] = useState(0)
     const [alcoholLevel, setAlcoholLevel] = useState(0)
     const [timeTillAlcZero, setTimeTillAlcZero] = useState(0)
+
     const [alternateButtons, setAlternateButtons] = useState(false)
+    const [darkMode, setDarkMode] = useState(false)
     
     const [userInfo, setUserInfo] = useState({weight: 60, dateOfBirth: Date.now(), gender: 'female'})
 
@@ -63,6 +65,10 @@ export const GlobalProvider = ({children}) => {
             try {
                 const alternateButtonsState = await getAlternateButtonsState()
                 setAlternateButtons(alternateButtonsState)
+
+                const darkModeState = await getDarkModeState()
+                setDarkMode(darkModeState)
+
             } catch (error) {
                 console.log("Error aplying display settings: " + error)
             }
@@ -447,7 +453,9 @@ export const GlobalProvider = ({children}) => {
                 isOffline,
                 setIsOffline,
                 alternateButtons,
-                setAlternateButtons
+                setAlternateButtons,
+                darkMode,
+                setDarkMode
             }}
         >
             {children}

@@ -5,12 +5,15 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import WaterInfoPage from '../../components/WaterInfoPage'
 import GraphPage from '../../components/GraphPage'
 import PageIndicator from '../../components/PageIndicator'
+import { useGlobalContext } from '../../context/globalProvider'
 
 
 const home = () => {
   const screenWidth = Dimensions.get('window').width;
 
   const [activePage, setActivePage] = useState(0)
+
+  const {darkMode} = useGlobalContext()
 
   const handleScroll = (event) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
@@ -20,7 +23,7 @@ const home = () => {
   
   return (
     <SafeAreaView
-      className="bg-primary h-full"
+      className={`${darkMode ? 'bg-secondary' : 'bg-primary'} h-full`}
     >
       <ScrollView
         horizontal={true}

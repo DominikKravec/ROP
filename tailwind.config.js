@@ -31,6 +31,7 @@ module.exports = {
         DEFAULT: '#47A83E',
       },
       primary: '#fefeff',
+      secondary: '#1B1B1B',
     },
   },
   plugins: [],

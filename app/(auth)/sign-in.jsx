@@ -18,7 +18,7 @@ const SignIn = () => {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const {setUser, setIsLoggedIn, scheduleNotifications} = useGlobalContext()
+  const {setUser, setIsLoggedIn, darkMode} = useGlobalContext()
 
   const [modal, setModal] = useState(false)
   const [modalText, setModalText] = useState('')
@@ -56,7 +56,7 @@ const SignIn = () => {
 
   return (
     <SafeAreaView className="h-full">
-      <View className=" justify-center items-center h-full bg-primary">
+      <View className={`justify-center items-center h-full ${darkMode ? 'bg-secondary' : 'bg-primary'}`}>
         <Input
           placeholder={"email"}
           value={email}
