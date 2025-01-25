@@ -6,7 +6,6 @@ import { waterId, weatherApiKey } from "../constants/other";
 import * as Location from 'expo-location';
 import { emptyLogStorage, getAlternateButtonsState, getStoredLogs, getStoredUser, getStoredUserInfo, getStoredUserSttings, storeUser, storeUserInfo, storeUserSettings } from "../lib/asyncStorage";
 import * as Network from 'expo-network';
-import { Alert } from "react-native";
 import { readData } from "../lib/healthConnect";
 
 
@@ -172,7 +171,6 @@ export const GlobalProvider = ({children}) => {
         aplyUserInfo()
         aplyUserSettings()
         getInfoFromDrinks()
-
     
     }, [user, isOffline])
 
@@ -288,19 +286,19 @@ export const GlobalProvider = ({children}) => {
             }
 
             let goal = info.weight * 35
-            console.log("The water goal will be: " + goal)
-
-            if(isOffline){
-                setWaterGoal(goal)
-                return
-            }
-
+            
             //increase water intake based on age
             let age = calculateAge(new Date(info.dateOfBirth))
             age -= 30
             while(age >= 0){
                 goal += 350
                 age -= 10
+            }
+
+            setWaterGoal(goal)
+
+            if(isOffline){
+                return
             }
             
             try {
@@ -321,8 +319,8 @@ export const GlobalProvider = ({children}) => {
             try {
                 const physicalActivityData = await readData()
     
-                const burnedCalories = physicalActivityData[0].energy.inKilocalories
-                console.log("Burned calories: " + burnedCalories)
+                const burnedCalories = physicalActivityData[0].energy.inCalories
+                //console.log("Burned calories: " + burnedCalories)
     
                 //a person should drink about 0.3 litres more for every 300-500 calories burned
                 goal += (burnedCalories / 400) * 300 
@@ -331,7 +329,9 @@ export const GlobalProvider = ({children}) => {
                 console.log("Error reading calorie data: " + error)
             }
 
-            setWaterGoal(Math.round(goal))
+            console.log("Changing water goal")
+            setWaterGoal(goal)
+
             scheduleNotifications(Math.round(goal))
         }catch(error){
             console.log(error)

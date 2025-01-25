@@ -60,7 +60,7 @@ const DrinkEdit = () => {
   }
   
   return (
-    <SafeAreaView className="h-full justify-center items-center">
+    <SafeAreaView className="h-full justify-center items-center bg-primary">
       <Input
         placeholder={"drink name"}
         value={name}

@@ -145,7 +145,7 @@ const WaterInfoPage = () => {
 
                 <Text className="text-2xl text-blue mt-5">
                     {/* change the height of the parent when you add more parts */}        
-                    {Math.round(waterDrank)}/{waterGoal}{unit}
+                    {Math.round(waterDrank)}/{Math.round(waterGoal)}{unit}
 
                 </Text>
             </View>

@@ -31,7 +31,7 @@ const customDrinks = () => {
     }
 
     return (
-        <SafeAreaView className="justify-center items-center h-full p-10">
+        <SafeAreaView className="justify-center items-center h-full p-10 bg-primary">
             <FlatList
                 data={customDrinks}
                 keyExtractor={(item) => {item.$id}}
@@ -43,7 +43,10 @@ const customDrinks = () => {
                     </View>
                 )}
                 renderItem={({item}) => (
-                    <View className="w-full justify-center items-center">
+                    <View 
+                        className="w-full justify-center items-center"
+                        key={item.$id}
+                    >
                         <CustomDrink 
                             drink={item}
                         />
