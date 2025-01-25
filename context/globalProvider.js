@@ -319,7 +319,7 @@ export const GlobalProvider = ({children}) => {
             try {
                 const physicalActivityData = await readData()
     
-                const burnedCalories = physicalActivityData[0].energy.inCalories
+                const burnedCalories = physicalActivityData[0].energy.inKilocalories
                 //console.log("Burned calories: " + burnedCalories)
     
                 //a person should drink about 0.3 litres more for every 300-500 calories burned

@@ -33,7 +33,7 @@ const profile = () => {
       try {
         const physicalActivityData = await readData()
         console.log(physicalActivityData)
-        const calories = physicalActivityData[0].energy.inCalories
+        const calories = physicalActivityData[0].energy.inKilocalories
         //console.log("Burned calories" + calories)
         setBurnedCalories(calories)
       } catch (error) {
