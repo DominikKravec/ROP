@@ -20,7 +20,6 @@ const profile = () => {
   const [modal, setModal] = useState(false)
   const [modalContent, setModalContent] = useState(null)
   const {user, setUser, setIsLoggedIn, isOffline, setIsOffline, setAlternateButtons, alternateButtons, getCurrentTemperature, darkMode, setDarkMode} = useGlobalContext()
-  console.log("🚀 ~ profile ~ darkMode:", darkMode)
   const [temperature, setTemperature] = useState(0)
   const [burnedCalories, setBurnedCalories] = useState(0)
 

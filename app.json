@@ -8,9 +8,9 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/icon_blue.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#A5D9FF"
     },
     "ios": {
       "supportsTablet": true,
@@ -18,6 +18,10 @@
     },
     "android": {
       "package": "com.kravec.healthReminder",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#3CACFD"
+      },
       "permissions": [
         "android.permission.health.READ_TOTAL_CALORIES_BURNED"
       ]
