@@ -20,10 +20,10 @@ const ReminderAmountModal = ({closeModal}) => {
           placeholder={"Amount"}
           value={amount}
           handleChangeText={(text) => {setAmount(parseInt(text))}}
-          type='number'
+          type='numeric'
         />
         <Button
-            title={'Set reminder amount to ' + amount}
+            title={'Set reminder amount to ' + (amount ? amount : '0')}
             containerStyles={'mt-5'}
             handle={() => {
               updateUserSettings(user.$id, {...userSettings, reminderAmount: amount})

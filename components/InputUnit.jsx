@@ -11,7 +11,7 @@ const InputUnit = ({options, value, unit, handleChangeText, handleChangeUnit}) =
             className='border-b-2 border-b-blue text-2xl w-20 text-blue'
             onChangeText={handleChangeText}
             value={value}
-            keyboardType='number-pad'
+            keyboardType='decimal-pad'
             defaultValue={(value ? value + "" : 0)}
         />
         <Text className="text-blue text-2xl">{unit}</Text>

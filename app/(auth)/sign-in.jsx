@@ -55,12 +55,13 @@ const SignIn = () => {
   }
 
   return (
-    <SafeAreaView className="h-full">
-      <View className={`justify-center items-center h-full ${darkMode ? 'bg-secondary' : 'bg-primary'}`}>
+    <SafeAreaView className={`h-full ${darkMode ? 'bg-secondary' : 'bg-primary'}`}>
+      <View className={`justify-center items-center h-full `}>
         <Input
           placeholder={"email"}
+          type='email-address'
           value={email}
-          handleChangeText={(text) => {setEmail(text)}}
+          handleChangeText={(text) => {setEmail(text.toLowerCase())}}
         />
         <Input
           title='password'

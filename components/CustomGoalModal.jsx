@@ -32,7 +32,7 @@ const CustomGoalModal = ({closeModal}) => {
           handleChangeUnit={option => {setUnit(option.label)}}
         />
         <Button
-            title={'Set goal to ' + amount ? amount : '0' + unit}
+            title={'Set goal to ' + (amount ? amount : '0') + unit}
             containerStyles={'mt-5'}
             handle={() => {
               setUserSettings({...userSettings, customWaterGoal: (parseFloat(amount) * volumeUnits[unit])})

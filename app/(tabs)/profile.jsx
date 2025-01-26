@@ -95,6 +95,7 @@ const profile = () => {
                         handle={() => {
                           storeAlternateButtonsState(!alternateButtons)
                           setAlternateButtons(!alternateButtons)
+                          setModal(false)
                         }}
                       />
                       <Button
@@ -103,6 +104,7 @@ const profile = () => {
                         handle={() => {
                           storeDarkMode(!darkMode)
                           setDarkMode(!darkMode)
+                          setModal(false)
                         }}
                       />
                     </View>

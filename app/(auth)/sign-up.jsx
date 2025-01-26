@@ -64,7 +64,8 @@ const SignUp = () => {
         <Input
           placeholder={"email"}
           value={email}
-          handleChangeText={(text) => {setEmail(text)}}
+          type='email-address'
+          handleChangeText={(text) => {setEmail(text.toLowerCase())}}
         />
         <Input
           placeholder={"username"}
