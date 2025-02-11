@@ -32,10 +32,13 @@ const profile = () => {
     const getCalories = async () => {
       try {
         const physicalActivityData = await readData()
-        console.log(physicalActivityData)
-        const calories = physicalActivityData[0].energy.inKilocalories
+    
+        let calories = 0
+        physicalActivityData.forEach(log => {
+            calories += log.energy.inKilocalories
+        })
         //console.log("Burned calories" + calories)
-        setBurnedCalories(calories)
+        setBurnedCalories(Math.round(calories))
       } catch (error) {
         console.log("Error getting calories burned: ", error)
       }

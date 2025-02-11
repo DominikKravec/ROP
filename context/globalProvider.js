@@ -238,7 +238,6 @@ export const GlobalProvider = ({children}) => {
     const scheduleNotifications = async (waterGoal) => {
         const {reminderAmount, cupSize} = await getUserSettings(user.$id);
 
-        Notifications.cancelAllScheduledNotificationsAsync()
         const startTime = new Date();
         startTime.setHours(7, 0, 0, 0); // change this to the users choice
 
@@ -265,8 +264,8 @@ export const GlobalProvider = ({children}) => {
 
         //console.log(`At cup size ${cupSize} and reminder amount ${reminderAmount} with a water goal ${waterGoal} you should drink ${amountPerNotification} cups of water per notification`)
 
-        scheduleDailyNotifications(notificationTimes, amountPerNotification)
-
+        await scheduleDailyNotifications(notificationTimes, amountPerNotification)
+        //console.log(JSON.stringify(await Notifications.getAllScheduledNotificationsAsync()))
     }
 
     const calculateAge = (dob) => {
@@ -304,6 +303,7 @@ export const GlobalProvider = ({children}) => {
             setWaterGoal(goal)
 
             if(isOffline){
+                scheduleNotifications(Math.round(goal))
                 return
             }
             
@@ -325,7 +325,11 @@ export const GlobalProvider = ({children}) => {
             try {
                 const physicalActivityData = await readData()
     
-                const burnedCalories = physicalActivityData[0].energy.inKilocalories
+                let burnedCalories = 0
+                physicalActivityData.forEach(log => {
+                    burnedCalories += log.energy.inKilocalories
+                })
+
                 //console.log("Burned calories: " + burnedCalories)
     
                 //a person should drink about 0.3 litres more for every 300-500 calories burned
