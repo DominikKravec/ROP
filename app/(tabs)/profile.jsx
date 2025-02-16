@@ -14,6 +14,8 @@ import { signOut } from '../../lib/appwrite.js'
 import { sendNotification } from '../../lib/notifications.js'
 import { storeAlternateButtonsState, storeDarkMode, storeUser } from '../../lib/asyncStorage.js'
 import { readData } from '../../lib/healthConnect.js'
+import { generateMonthlyLogs } from '../../lib/dataFactory.js'
+import { getUserDrinks } from '../../lib/appwrite.js'
 
 const profile = () => {
 
@@ -22,11 +24,23 @@ const profile = () => {
   const {user, setUser, setIsLoggedIn, isOffline, setIsOffline, setAlternateButtons, alternateButtons, getCurrentTemperature, darkMode, setDarkMode} = useGlobalContext()
   const [temperature, setTemperature] = useState(0)
   const [burnedCalories, setBurnedCalories] = useState(0)
+  const [drinkOptions, setDrinkOptions] = useState([])
 
   useEffect(() => {
     const getTemp = async () => {
       const temp = await getCurrentTemperature()
       setTemperature(temp)
+    }
+
+    const getDrinks = async () => {
+      try{
+        
+        const drinks = await getUserDrinks(user.$id)
+        setDrinkOptions(drinks)
+        
+      }catch(error){
+        console.log(error)
+      }
     }
 
     const getCalories = async () => {
@@ -46,7 +60,8 @@ const profile = () => {
 
     getTemp()
     getCalories()
-  })
+    getDrinks()
+  }, [])
 
   return (
     <SafeAreaView className={`h-full px-5 ${darkMode ? 'bg-secondary' : 'bg-primary'}`}>
@@ -137,6 +152,14 @@ const profile = () => {
                       <Button
                         title="Send notification"
                         handle={() => {sendNotification()}}
+                      />
+
+                      <Button
+                        title="Generate random data"
+                        containerStyles={'mt-5'}
+                        handle={() => {
+                          generateMonthlyLogs(user.$id, drinkOptions)
+                        }}
                       />
 
                       <Button
