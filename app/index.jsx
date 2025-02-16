@@ -1,8 +1,9 @@
-import { View, Text } from 'react-native'
+import { View, Text, Image } from 'react-native'
 import React from 'react'
 import Button from '../components/Button'
 import { router, Redirect } from 'expo-router'
 import { useGlobalContext } from '../context/globalProvider'
+import { images } from '../constants'
 
 
 const index = () => {
@@ -13,6 +14,11 @@ const index = () => {
 
   return (
     <View className={`justify-center items-center h-full ${darkMode ? 'bg-secondary' : 'bg-primary'}`}>
+      
+      <Image
+        source={images.icon_blue}
+        className="mb-5"
+      />
       <Text className="text-blue text-2xl">Welcome to Health Reminder</Text>
       {isOffline ? 
         <Text className="text-blue text-lg w-[75vw] text-center">You are offline. You need to connect to a network to log in. After that you can use this app even if you are offline. </Text> 
