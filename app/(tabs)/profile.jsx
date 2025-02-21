@@ -151,7 +151,7 @@ const profile = () => {
                     <View>
                       <Button
                         title="Send notification"
-                        handle={() => {sendNotification()}}
+                        handle={() => {sendNotification(1)}}
                       />
 
                       <Button
