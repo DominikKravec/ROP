@@ -23,7 +23,10 @@ const SignIn = () => {
   const [modal, setModal] = useState(false)
   const [modalText, setModalText] = useState('')
 
+  const [isLoading, setIsLoading] = useState(false)
+
   const submit = async () => {
+    setIsLoading(true)
     if(email.trim() && password.trim() && isValidEmail(email.trim())){
       try {
         await signIn(email, password)
@@ -40,6 +43,8 @@ const SignIn = () => {
           setModal(true)
         }
         console.log(error)
+      }finally{
+        
       }
     }else{
       if(!email.trim() || !password.trim()){
@@ -52,6 +57,8 @@ const SignIn = () => {
         setModal(true)
       }
     }
+    setIsLoading(false)
+
   }
 
   return (
@@ -71,6 +78,7 @@ const SignIn = () => {
           handleChangeText={(text) => {setPassword(text)}}
         />
         <Button
+          isLoading={isLoading}
           title="Sign In"
           handle={() => {submit()}}
           containerStyles={'mt-4'}

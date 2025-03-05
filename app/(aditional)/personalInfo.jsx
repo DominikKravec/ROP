@@ -10,6 +10,7 @@ import { getUserInfo, saveUserInfo } from '../../lib/appwrite.js'
 import { useGlobalContext } from '../../context/globalProvider.js'
 import { weightUnits } from '../../constants/units.js'
 import { schedulePushNotification } from '../../lib/notifications.js'
+import CustomModal from '../../components/CustomModal.jsx'
 
 const personalInfo = () => {
 
@@ -61,7 +62,12 @@ const personalInfo = () => {
 
   const daysInMonths = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
+  const [modal, setModal] = useState(false)
+
+  const [isLoading, setIsLoading] = useState(false)
+
   const save =  async () => {
+    setIsLoading(true)
     if(dateOfBirth.date <= daysInMonths[dateOfBirth.month - 1] && weight > 0){
       try {
         await saveUserInfo(documentId, weight, gender, dateOfBirth)
@@ -72,8 +78,10 @@ const personalInfo = () => {
       } catch (error) {
         console.log(error)
       }     
+    }else{
+      setModal(true)
     }
-    
+    setIsLoading(false)
   }
 
   return (
@@ -118,7 +126,19 @@ const personalInfo = () => {
         title={"Save"}
         handle={() => {save()}}
         containerStyles={"mt-10"}
+        isLoading={isLoading}
       />
+
+      <CustomModal
+        modal={modal}
+        setModal={setModal}
+        modalContent={(
+          <View>
+            <Text className="text-2xl text-red-100">Please enter valid information</Text>
+          </View>
+        )}
+      />
+
     </SafeAreaView>
   )
 }

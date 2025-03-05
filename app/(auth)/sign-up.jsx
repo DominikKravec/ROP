@@ -25,7 +25,10 @@ const SignUp = () => {
 
   const {setUser, setIsLoggedIn, darkMode} = useGlobalContext()
 
+  const [isLoading, setIsLoading] = useState(false)
+
   const register = async () => {
+    setIsLoading(true)
     if(username.trim() && email.trim() && password.trim() && password.length >= 8 && isValidEmail(email.trim())){
       try {
         const result = await createUser(email, password, username)
@@ -56,6 +59,7 @@ const SignUp = () => {
         setModalText('Please enter a valid email format')
       }
     }
+    setIsLoading(false)
   }
 
   return (
@@ -84,6 +88,7 @@ const SignUp = () => {
           title="Register"
           handle={() => {register()}}
           containerStyles={'mt-4'}
+          isLoading={isLoading}
         />
         <View className="flex flex-row mt-3">
           <Text className="text-sm text-blue-200">
