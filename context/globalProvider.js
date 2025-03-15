@@ -290,7 +290,7 @@ export const GlobalProvider = ({children}) => {
                 info = await getUserInfo(user.$id)
             }
 
-            let goal = info.weight * 35
+            let goal = info.weight * 30             //30ml per kg of body weight
             
             //increase water intake based on age
             let age = calculateAge(new Date(info.dateOfBirth))
@@ -332,8 +332,7 @@ export const GlobalProvider = ({children}) => {
 
                 //console.log("Burned calories: " + burnedCalories)
     
-                //a person should drink about 0.3 litres more for every 300-500 calories burned
-                goal += (burnedCalories / 400) * 300 
+                goal += burnedCalories * 0.75
                 
             } catch (error) {
                 console.log("Error reading calorie data: " + error)

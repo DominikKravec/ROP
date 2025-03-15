@@ -155,7 +155,7 @@ const WaterInfoPage = () => {
                     <View className="w-[48%]">
                         <IconButton
                             icon={icons.cupIcon}
-                            title="quick cup"
+                            title="Quick cup"
                             handle={() => {quickCup()}}
                         />
                     </View>
